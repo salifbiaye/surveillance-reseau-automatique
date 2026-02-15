@@ -700,8 +700,6 @@ http://192.168.1.100:5601
 1. Cliquer sur "Explore on my own"
 2. Patienter quelques secondes
 
-![Interface Kibana](../../images/suricata.png)
-
 ### 7.6.2 Créer un Data View
 
 **Les Data Views permettent de visualiser les données Elasticsearch.**
@@ -1332,10 +1330,6 @@ curl http://testmyids.com
 | **Kibana** | http://192.168.1.100:5601 | Visualisation données |
 | **Elasticsearch** | http://192.168.1.100:9200 | API Elasticsearch |
 | **Portainer** | http://192.168.1.100:9000 | Gestion Docker |
-
-**Page d'accueil NSOC (http://192.168.1.100):**
-
-![Interface page d'accueil NSOC](../../images/surveillance.png)
 
 ---
 

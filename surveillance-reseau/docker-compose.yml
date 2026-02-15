@@ -1,0 +1,215 @@
+services:
+  # ============================================
+  # INIT - Fix permissions pour Elasticsearch
+  # ============================================
+  elasticsearch-init:
+    image: alpine:latest
+    container_name: surveillance-elasticsearch-init
+    volumes:
+      - ./data/elasticsearch:/data/elasticsearch
+    command: >
+      sh -c "
+        echo '[INIT] Création et configuration du dossier Elasticsearch...';
+        mkdir -p /data/elasticsearch;
+        chmod -R 777 /data/elasticsearch;
+        echo '[INIT] Permissions configurées. Elasticsearch peut démarrer.';
+      "
+    restart: "no"
+
+  # ============================================
+  # ELASTICSEARCH - Stockage et indexation
+  # ============================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: surveillance-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - surveillance-net
+    depends_on:
+      elasticsearch-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============================================
+  # KIBANA - Visualisation et recherche
+  # ============================================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: surveillance-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=surveillance-kibana
+      - SERVER_HOST=0.0.0.0
+    ports:
+      - "5601:5601"
+    networks:
+      - surveillance-net
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============================================
+  # SURICATA - IDS/IPS (Capture et analyse)
+  # ============================================
+  suricata:
+    image: jasonish/suricata:7.0
+    container_name: surveillance-suricata
+    network_mode: host
+    environment:
+      - CAPTURE_INTERFACE=ens33
+    volumes:
+      - ./configs/suricata/suricata.yaml:/etc/suricata/suricata.yaml
+      - ./configs/suricata/rules:/var/lib/suricata/rules
+      - ./data/logs/suricata:/var/log/suricata
+      - ./data/pcap:/data/pcap
+      - ./scripts/start-suricata.sh:/start-suricata.sh:ro
+    entrypoint: ["/bin/bash"]
+    command: ["/start-suricata.sh"]
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
+
+  # ============================================
+  # TCPDUMP - Capture PCAP (backup)
+  # ============================================
+  tcpdump:
+    image: nicolaka/netshoot
+    container_name: surveillance-tcpdump
+    network_mode: host
+    environment:
+      - CAPTURE_INTERFACE=ens33
+    volumes:
+      - ./data/pcap:/data/pcap
+      - ./scripts:/scripts:ro
+    command: >
+      bash -c "
+        /scripts/capture.sh
+      "
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  # ============================================
+  # ARPWATCH - Surveillance ARP (MAC/IP mapping)
+  # ============================================
+  arpwatch:
+    image: ubuntu:22.04
+    container_name: surveillance-arpwatch
+    network_mode: host
+    environment:
+      - ARPWATCH_INTERFACE=ens33
+    volumes:
+      - ./data/logs/arpwatch:/var/lib/arpwatch
+      - ./scripts/start-arpwatch.sh:/start-arpwatch.sh:ro
+    command: /bin/bash /start-arpwatch.sh
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  # ============================================
+  # INIT - Fix permissions pour Filebeat
+  # ============================================
+  filebeat-init:
+    image: alpine:latest
+    container_name: surveillance-filebeat-init
+    volumes:
+      - ./configs/filebeat:/configs/filebeat
+      - ./data/logs:/data/logs
+    command: >
+      sh -c "
+        echo '[INIT] Configuration des permissions Filebeat...';
+        chmod 644 /configs/filebeat/filebeat.yml;
+        chown root:root /configs/filebeat/filebeat.yml 2>/dev/null || true;
+        mkdir -p /data/logs/suricata /data/logs/arpwatch;
+        chmod -R 755 /data/logs;
+        echo '[INIT] Permissions Filebeat configurées.';
+      "
+    restart: "no"
+
+  # ============================================
+  # FILEBEAT - Envoi logs vers Elasticsearch
+  # ============================================
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.0
+    container_name: surveillance-filebeat
+    user: root
+    volumes:
+      - ./configs/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./data/logs:/data/logs:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "5140:5140/udp"  # Port Syslog pour pfSense (optionnel)
+    networks:
+      - surveillance-net
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      filebeat-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # ============================================
+  # NGINX - Page d'accueil
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    container_name: surveillance-nginx
+    volumes:
+      - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/nginx/html:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+    networks:
+      - surveillance-net
+    depends_on:
+      - kibana
+    restart: unless-stopped
+
+  # ============================================
+  # INIT - Configuration automatique Kibana
+  # ============================================
+  kibana-init:
+    image: curlimages/curl:latest
+    container_name: surveillance-kibana-init
+    networks:
+      - surveillance-net
+    depends_on:
+      kibana:
+        condition: service_healthy
+    volumes:
+      - ./scripts/init-kibana.sh:/init-kibana.sh:ro
+    entrypoint: ["/bin/sh", "/init-kibana.sh"]
+    restart: "no"
+
+networks:
+  surveillance-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+
+volumes:
+  elasticsearch-data:

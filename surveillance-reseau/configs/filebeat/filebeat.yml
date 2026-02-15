@@ -1,0 +1,96 @@
+filebeat.inputs:
+  # ============================================
+  # Logs Suricata
+  # ============================================
+  - type: log
+    enabled: true
+    paths:
+      - /data/logs/suricata/eve.json
+    json.keys_under_root: true
+    json.add_error_key: true
+    fields:
+      log_type: suricata
+    fields_under_root: true
+
+  # ============================================
+  # Logs ARPWatch (JSON)
+  # ============================================
+  - type: log
+    enabled: true
+    paths:
+      - /data/logs/arpwatch/arpwatch.log
+    json.keys_under_root: true
+    json.add_error_key: true
+    fields:
+      log_type: arpwatch
+    fields_under_root: true
+
+  # ============================================
+  # Logs pfSense (Syslog UDP) - OPTIONNEL
+  # ============================================
+  - type: syslog
+    enabled: true
+    protocol.udp:
+      host: "0.0.0.0:5140"
+    fields:
+      log_type: pfsense
+      firewall: pfsense
+    fields_under_root: true
+    processors:
+      - drop_event:
+          when:
+            not:
+              has_fields: ['message']
+
+  # ============================================
+  # Logs génériques
+  # ============================================
+  - type: log
+    enabled: true
+    paths:
+      - /data/logs/**/*.log
+    exclude_files: ['\.gz$', 'arpwatch']
+    fields:
+      log_type: generic
+    fields_under_root: true
+
+# ============================================
+# Output vers Elasticsearch
+# ============================================
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  username: "elastic"
+  password: "passer"
+  indices:
+    - index: "suricata-%{+yyyy.MM.dd}"
+      when.equals:
+        log_type: "suricata"
+    - index: "arpwatch-%{+yyyy.MM.dd}"
+      when.equals:
+        log_type: "arpwatch"
+    - index: "pfsense-%{+yyyy.MM.dd}"
+      when.equals:
+        log_type: "pfsense"
+    - index: "logs-%{+yyyy.MM.dd}"
+
+# ============================================
+# Logging
+# ============================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+# ============================================
+# Processors
+# ============================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_docker_metadata: ~
+  - drop_fields:
+      fields: ["agent", "ecs", "host.name"]
+      ignore_missing: true

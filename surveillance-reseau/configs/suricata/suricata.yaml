@@ -1,0 +1,184 @@
+%YAML 1.1
+---
+
+# ============================================
+# SURICATA CONFIGURATION
+# Projet Surveillance Réseau - UCAD ESP
+# ============================================
+
+vars:
+  address-groups:
+    HOME_NET: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+    EXTERNAL_NET: "!$HOME_NET"
+    HTTP_SERVERS: "$HOME_NET"
+    SMTP_SERVERS: "$HOME_NET"
+    SQL_SERVERS: "$HOME_NET"
+    DNS_SERVERS: "$HOME_NET"
+    TELNET_SERVERS: "$HOME_NET"
+
+  port-groups:
+    HTTP_PORTS: "80"
+    SHELLCODE_PORTS: "!80"
+    ORACLE_PORTS: 1521
+    SSH_PORTS: 22
+    DNP3_PORTS: 20000
+    MODBUS_PORTS: 502
+    FILE_DATA_PORTS: "[$HTTP_PORTS,110,143]"
+    FTP_PORTS: 21
+
+# ============================================
+# Règles
+# ============================================
+default-rule-path: /var/lib/suricata/rules
+rule-files:
+  - suricata.rules
+
+# ============================================
+# Outputs
+# ============================================
+outputs:
+  # EVE JSON log
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      community-id: true
+      community-id-seed: 0
+      types:
+        - alert:
+            payload: yes
+            payload-buffer-size: 4kb
+            payload-printable: yes
+            packet: yes
+            metadata: yes
+            http-body: yes
+            http-body-printable: yes
+        - http:
+            extended: yes
+        - dns:
+            query: yes
+            answer: yes
+        - tls:
+            extended: yes
+        - files:
+            force-magic: yes
+        - smtp:
+        - ssh
+        - stats:
+            totals: yes
+            threads: yes
+        - flow
+        - netflow
+
+  # Logs unified2 (optionnel)
+  - unified2-alert:
+      enabled: no
+      filename: unified2.alert
+
+  # Logs texte
+  - fast:
+      enabled: yes
+      filename: fast.log
+      append: yes
+
+# ============================================
+# Logging
+# ============================================
+logging:
+  default-log-level: info
+  outputs:
+    - console:
+        enabled: yes
+    - file:
+        enabled: yes
+        level: info
+        filename: /var/log/suricata/suricata.log
+
+# ============================================
+# AF-PACKET configuration
+# ============================================
+af-packet:
+  - interface: eth0
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+    ring-size: 2048
+    block-size: 32768
+
+# ============================================
+# Performance tuning
+# ============================================
+threading:
+  set-cpu-affinity: no
+  cpu-affinity:
+    - management-cpu-set:
+        cpu: [ 0 ]
+    - receive-cpu-set:
+        cpu: [ 0 ]
+    - worker-cpu-set:
+        cpu: [ "all" ]
+  detect-thread-ratio: 1.0
+
+# ============================================
+# Detection engine
+# ============================================
+detect-engine:
+  - profile: medium
+  - custom-values:
+      toclient-groups: 3
+      toserver-groups: 25
+  - sgh-mpm-context: auto
+  - inspection-recursion-limit: 3000
+
+# ============================================
+# Stream engine
+# ============================================
+stream:
+  memcap: 64mb
+  checksum-validation: yes
+  inline: auto
+  reassembly:
+    memcap: 256mb
+    depth: 1mb
+    toserver-chunk-size: 2560
+    toclient-chunk-size: 2560
+
+# ============================================
+# Application layer protocols
+# ============================================
+app-layer:
+  protocols:
+    http:
+      enabled: yes
+      memcap: 64mb
+    tls:
+      enabled: yes
+      detection-ports:
+        dp: 443
+    dns:
+      tcp:
+        enabled: yes
+        detection-ports:
+          dp: 53
+      udp:
+        enabled: yes
+        detection-ports:
+          dp: 53
+    ssh:
+      enabled: yes
+    smtp:
+      enabled: yes
+      mime:
+        decode-mime: yes
+        decode-base64: yes
+        decode-quoted-printable: yes
+        body-md5: yes
+
+# ============================================
+# Capture stats
+# ============================================
+stats:
+  enabled: yes
+  interval: 60

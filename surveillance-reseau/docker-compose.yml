@@ -187,14 +187,15 @@ services:
   arkime:
     image: mosajjal/arkime:v5.0.1
     container_name: surveillance-arkime
+    network_mode: host
     environment:
-      - ARKIME_ELASTICSEARCH=http://elastic:${ELASTIC_PASSWORD}@elasticsearch:9200
-      - ARKIME_INTERFACE=eth0
+      - ARKIME_ELASTICSEARCH=http://elastic:${ELASTIC_PASSWORD}@localhost:9200
+      - ARKIME_INTERFACE=lo
       - ARKIME_PCAPDIR=/data/pcap
       - ARKIME_PCAPWRITEMETHOD=null
       - ARKIME_PASSWORDSECRET=SuperSecretPasswordForArkime2024!
       - ARKIME_VIEWPORT=8005
-      - ARKIME_VIEWHOST=0.0.0.0
+      - ARKIME_VIEWHOST=127.0.0.1
       - ARKIME_AUTOINIT=true
       - ARKIME_CREATEADMINUSER=true
       - ARKIME_ADMINCREDS=admin:${ARKIME_PASSWORD}
@@ -202,12 +203,6 @@ services:
     volumes:
       - ./data/pcap:/data/pcap:ro
       - arkime-data:/data/moloch/raw
-    # Pas de port exposé directement, accès via NGINX proxy
-    networks:
-      - surveillance-net
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
     restart: unless-stopped
     cap_add:
       - NET_ADMIN

@@ -7,6 +7,28 @@
 
 set -e
 
+echo "[INIT] Configuration de la sécurité Elasticsearch..."
+
+# Attendre qu'Elasticsearch soit prêt
+echo "[INIT] Attente d'Elasticsearch..."
+for i in {1..60}; do
+    if curl -s -u elastic:changeme http://elasticsearch:9200/_cluster/health > /dev/null 2>&1; then
+        echo "[INIT] Elasticsearch est prêt!"
+        break
+    fi
+    sleep 3
+done
+
+# Configurer le mot de passe kibana_system
+echo "[INIT] Configuration du mot de passe kibana_system..."
+curl -X POST -u elastic:changeme \
+  "http://elasticsearch:9200/_security/user/kibana_system/_password" \
+  -H "Content-Type: application/json" \
+  -d '{"password":"changeme"}' > /dev/null 2>&1
+
+echo "[INIT] Mot de passe kibana_system configuré!"
+sleep 5
+
 echo "[INIT] Attente de Kibana..."
 
 # Attendre que Kibana soit prêt (max 5 minutes)

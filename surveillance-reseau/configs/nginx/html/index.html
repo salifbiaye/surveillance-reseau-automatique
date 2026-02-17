@@ -927,13 +927,51 @@
         updateClock();
 
         // ---- Real service status checks ----
-        // Note: Les services sont sur localhost, donc pas accessibles depuis le navigateur
-        // On affiche "En ligne" par défaut si les conteneurs tournent
-        
         async function checkAllServices() {
-            // Tous les services sont considérés en ligne
-            // Pour vérifier réellement, il faudrait une API backend
-            console.log('Services status: All running (no real-time check from browser)');
+            // Check via Docker API
+            try {
+                const dockerResponse = await fetch('/api/docker/status');
+                if (dockerResponse.ok) {
+                    const data = await dockerResponse.json();
+                    const containers = data.containers;
+                    
+                    // Elasticsearch
+                    updateServiceStatus('es-status', 0, containers['surveillance-elasticsearch']);
+                    
+                    // Kibana
+                    updateServiceStatus('kibana-status', 1, containers['surveillance-kibana']);
+                    
+                    // Suricata
+                    updateServiceStatus('suricata-status', 2, containers['surveillance-suricata']);
+                    
+                    // Tcpdump
+                    updateServiceStatus('tcpdump-status', 3, containers['surveillance-tcpdump']);
+                    
+                    // Arkime
+                    updateServiceStatus('arkime-status', 4, containers['surveillance-arkime']);
+                    
+                    // System (all services)
+                    const allOnline = Object.values(containers).every(status => status === true);
+                    updateServiceStatus('system-status', 5, allOnline);
+                }
+            } catch (e) {
+                console.log('Cannot check Docker status:', e);
+            }
+        }
+
+        function updateServiceStatus(elementId, itemIndex, isOnline) {
+            const statusLabel = document.getElementById(elementId);
+            const statusDot = document.querySelectorAll('.status-item')[itemIndex].querySelector('.status-dot');
+            
+            if (isOnline) {
+                statusLabel.textContent = 'En ligne';
+                statusLabel.className = 'status-label online';
+                statusDot.className = 'status-dot online';
+            } else {
+                statusLabel.textContent = 'Hors ligne';
+                statusLabel.className = 'status-label offline';
+                statusDot.className = 'status-dot offline';
+            }
         }
 
         // Initial check
@@ -941,22 +979,51 @@
         setInterval(checkAllServices, 15000);
 
         // ---- Real Elasticsearch stats ----
-        // Note: Elasticsearch n'est pas accessible depuis le navigateur (localhost only)
-        // On affiche des valeurs par défaut
         async function updateElasticsearchStats() {
-            // Afficher "0" ou "N/A" car on ne peut pas accéder à ES depuis le navigateur
-            const packetsEl = document.getElementById('packets-count');
-            const alertsEl = document.getElementById('alerts-count');
-            const indicesEl = document.getElementById('indices-count');
-            
-            if (packetsEl) packetsEl.textContent = 'N/A';
-            if (alertsEl) alertsEl.textContent = 'N/A';
-            if (indicesEl) indicesEl.textContent = 'N/A';
-            
-            console.log('Elasticsearch stats not available from browser (localhost only)');
+            try {
+                // Get total document count - handle case where no indices exist yet
+                const countResponse = await fetch('/elasticsearch/_cat/count/suricata-*?format=json');
+                if (countResponse.ok) {
+                    const countData = await countResponse.json();
+                    const totalDocs = countData[0]?.count || '0';
+                    document.getElementById('packets-count').textContent = parseInt(totalDocs).toLocaleString('fr-FR');
+                } else {
+                    document.getElementById('packets-count').textContent = '0';
+                }
+
+                // Get alert count - handle case where no indices exist yet
+                const alertResponse = await fetch('/elasticsearch/suricata-*/_count', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: { term: { 'event_type': 'alert' }}
+                    })
+                });
+                if (alertResponse.ok) {
+                    const alertData = await alertResponse.json();
+                    document.getElementById('alerts-count').textContent = alertData.count.toLocaleString('fr-FR');
+                } else {
+                    document.getElementById('alerts-count').textContent = '0';
+                }
+
+                // Get indices count
+                const indicesResponse = await fetch('/elasticsearch/_cat/indices/suricata-*?format=json');
+                if (indicesResponse.ok) {
+                    const indicesData = await indicesResponse.json();
+                    document.getElementById('indices-count').textContent = indicesData.length;
+                } else {
+                    document.getElementById('indices-count').textContent = '0';
+                }
+            } catch (e) {
+                console.log('Cannot fetch Elasticsearch stats:', e);
+                document.getElementById('packets-count').textContent = '0';
+                document.getElementById('alerts-count').textContent = '0';
+                document.getElementById('indices-count').textContent = '0';
+            }
         }
 
         updateElasticsearchStats();
+        setInterval(updateElasticsearchStats, 30000);
 
         // ---- Real Docker container status via API ----
         // Note: Status API n'est pas accessible depuis le navigateur
@@ -968,14 +1035,28 @@
 
         // ---- Real system uptime ----
         async function updateSystemUptime() {
-            const uptimeEl = document.getElementById('uptime');
-            if (uptimeEl) {
-                uptimeEl.textContent = 'N/A';
+            try {
+                const response = await fetch('/api/system/uptime');
+                if (response.ok) {
+                    const data = await response.json();
+                    const uptimeEl = document.getElementById('uptime');
+                    
+                    if (data.uptime_days >= 1) {
+                        uptimeEl.textContent = data.uptime_days.toFixed(1) + ' jours';
+                    } else {
+                        const hours = Math.floor(data.uptime_seconds / 3600);
+                        const minutes = Math.floor((data.uptime_seconds % 3600) / 60);
+                        uptimeEl.textContent = hours + 'h ' + minutes + 'm';
+                    }
+                }
+            } catch (e) {
+                console.log('Cannot fetch uptime:', e);
+                document.getElementById('uptime').textContent = 'N/A';
             }
-            console.log('Uptime not available from browser');
         }
         
         updateSystemUptime();
+        setInterval(updateSystemUptime, 60000);
 
         // ---- Real activity from Elasticsearch ----
         const icons = {
@@ -1005,9 +1086,16 @@
                     })
                 });
 
+                const list = document.getElementById('activity-list');
+
                 if (response.ok) {
                     const data = await response.json();
-                    const list = document.getElementById('activity-list');
+                    
+                    if (!data.hits || !data.hits.hits || data.hits.hits.length === 0) {
+                        list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Aucune activité détectée<br><small>En attente de données Suricata</small></div>';
+                        return;
+                    }
+
                     list.innerHTML = ''; // Clear existing
 
                     data.hits.hits.forEach(hit => {
@@ -1050,10 +1138,12 @@
                             '</div>';
                         list.appendChild(item);
                     });
+                } else {
+                    // 404 = no indices yet
+                    list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Aucune activité détectée<br><small>En attente de données Suricata</small></div>';
                 }
             } catch (e) {
-                console.log('Cannot fetch activity from Elasticsearch');
-                // Show message that no data is available
+                console.log('Cannot fetch activity from Elasticsearch:', e);
                 const list = document.getElementById('activity-list');
                 list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Aucune activité disponible<br><small>Elasticsearch non accessible</small></div>';
             }

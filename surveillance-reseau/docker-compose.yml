@@ -208,7 +208,7 @@ services:
       - ARKIME_USERAUTHIPS=0.0.0.0/0
     volumes:
       - ./data/pcap:/data/pcap:ro
-      - ./configs/arkime/config-custom.ini:/opt/arkime/etc/config.ini:
+      - ./configs/arkime/config-custom.ini:/opt/arkime/etc/config.ini
       - arkime-data:/data/moloch/raw
     restart: unless-stopped
     cap_add:

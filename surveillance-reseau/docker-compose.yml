@@ -184,7 +184,7 @@ services:
   # ARKIME - Analyse et visualisation PCAP
   # ============================================
   arkime:
-    image: arkime/arkime:latest
+    image: mosajjal/arkime:latest
     container_name: surveillance-arkime
     environment:
       - ARKIME_INTERFACE=eth0

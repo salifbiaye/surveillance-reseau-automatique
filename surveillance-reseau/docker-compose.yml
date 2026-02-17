@@ -199,12 +199,11 @@ services:
       - ARKIME_PCAPWRITEMETHOD=null
       - ARKIME_PASSWORDSECRET=SuperSecretPasswordForArkime2024!
       - ARKIME_VIEWPORT=8005
-      - ARKIME_VIEWHOST=127.0.0.1
+      - ARKIME_VIEWHOST=0.0.0.0
       - ARKIME_AUTOINIT=true
       - ARKIME_CREATEADMINUSER=true
       - ARKIME_ADMINCREDS=admin:${ARKIME_PASSWORD}
       - ARKIME_USERNAMEHEADER=
-      - ARKIME_USERAUTHIPS=127.0.0.1;::1;172.16.0.0/12;10.0.0.0/8;192.168.0.0/16
     volumes:
       - ./data/pcap:/data/pcap:ro
       - arkime-data:/data/moloch/raw

@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 820" width="1100" height="820" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f4ff"/>
+      <stop offset="100%" style="stop-color:#e8f5f0"/>
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4f7ef7"/>
+      <stop offset="100%" style="stop-color:#38c5a0"/>
+    </linearGradient>
+    <linearGradient id="ph1bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff7ed"/>
+      <stop offset="100%" style="stop-color:#fef3e2"/>
+    </linearGradient>
+    <linearGradient id="ph2bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0fdf4"/>
+      <stop offset="100%" style="stop-color:#e6faf2"/>
+    </linearGradient>
+    <linearGradient id="ph3bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5f0ff"/>
+      <stop offset="100%" style="stop-color:#eee6ff"/>
+    </linearGradient>
+    <filter id="cardShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#00000018"/>
+    </filter>
+    <filter id="phaseShadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="#00000010"/>
+    </filter>
+    <marker id="arrowGray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4f7ef7"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#38c5a0"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="820" fill="url(#bg)"/>
+
+  <!-- Subtle dot pattern -->
+  <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+    <circle cx="15" cy="15" r="1.2" fill="#c7d2e8" opacity="0.5"/>
+  </pattern>
+  <rect width="1100" height="820" fill="url(#dots)"/>
+
+  <!-- ═══ HEADER ═══ -->
+  <rect x="0" y="0" width="1100" height="64" fill="url(#headerGrad)"/>
+  <text x="550" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="white" letter-spacing="1">🛡️  Architecture NSOC — Surveillance Réseau</text>
+  <text x="550" y="50" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.85)">Collecte · Analyse · Visualisation  —  Interface ens33</text>
+
+  <!-- ═══ NETWORK SOURCE ═══ -->
+  <rect x="380" y="80" width="340" height="56" rx="16" fill="white" stroke="#4f7ef7" stroke-width="2" filter="url(#cardShadow)"/>
+  <text x="420" y="106" font-size="22">🌐</text>
+  <text x="455" y="104" font-size="14" font-weight="700" fill="#1e3a6e">Réseau — Interface ens33</text>
+  <text x="455" y="122" font-size="11" fill="#64748b">Trafic réseau capturé en temps réel</text>
+
+  <!-- Arrow down -->
+  <line x1="550" y1="136" x2="550" y2="158" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowGray)"/>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- PHASE 1 -->
+  <!-- ═══════════════════════════════ -->
+  <rect x="24" y="162" width="1052" height="194" rx="16" fill="url(#ph1bg)" stroke="#f97316" stroke-width="1.5" filter="url(#phaseShadow)"/>
+  <!-- Phase label pill -->
+  <rect x="40" y="154" width="170" height="24" rx="12" fill="#f97316"/>
+  <text x="125" y="170" text-anchor="middle" font-size="11" font-weight="700" fill="white" letter-spacing="1">📡  PHASE 1 · COLLECTE</text>
+
+  <!-- Card: Suricata -->
+  <rect x="44" y="178" width="220" height="164" rx="12" fill="white" stroke="#fbbf24" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="44" y="178" width="220" height="36" rx="12" fill="#fef3c7"/>
+  <rect x="44" y="202" width="220" height="12" fill="#fef3c7"/>
+  <text x="64" y="202" font-size="18">🦔</text>
+  <text x="90" y="202" font-size="13" font-weight="700" fill="#92400e">Suricata</text>
+  <text x="90" y="216" font-size="9" fill="#b45309">IDS/IPS Engine</text>
+  <text x="58" y="238" font-size="9" fill="#78350f">▸ Capture trafic temps réel</text>
+  <text x="58" y="253" font-size="9" fill="#78350f">▸ Détection par signatures</text>
+  <text x="58" y="268" font-size="9" fill="#78350f">▸ HTTP · DNS · TLS · SSH</text>
+  <rect x="58" y="280" width="90" height="18" rx="6" fill="#fef9c3" stroke="#fbbf24" stroke-width="1"/>
+  <text x="103" y="293" text-anchor="middle" font-size="8" fill="#92400e" font-weight="600">📄 eve.json</text>
+  <rect x="158" y="280" width="90" height="18" rx="6" fill="#fef9c3" stroke="#fbbf24" stroke-width="1"/>
+  <text x="203" y="293" text-anchor="middle" font-size="8" fill="#92400e" font-weight="600">📄 fast.log</text>
+  <text x="58" y="328" font-size="8" fill="#a16207">📁 ./data/logs/suricata/</text>
+
+  <!-- Card: tcpdump -->
+  <rect x="284" y="178" width="200" height="164" rx="12" fill="white" stroke="#60a5fa" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="284" y="178" width="200" height="36" rx="12" fill="#dbeafe"/>
+  <rect x="284" y="202" width="200" height="12" fill="#dbeafe"/>
+  <text x="300" y="202" font-size="18">🔍</text>
+  <text x="326" y="202" font-size="13" font-weight="700" fill="#1e40af">tcpdump</text>
+  <text x="326" y="216" font-size="9" fill="#2563eb">Capture PCAP</text>
+  <text x="298" y="238" font-size="9" fill="#1e3a8a">▸ Capture brute réseau</text>
+  <text x="298" y="253" font-size="9" fill="#1e3a8a">▸ Rotation automatique</text>
+  <text x="298" y="268" font-size="9" fill="#1e3a8a">▸ Script capture.sh</text>
+  <rect x="298" y="280" width="168" height="18" rx="6" fill="#eff6ff" stroke="#60a5fa" stroke-width="1"/>
+  <text x="382" y="293" text-anchor="middle" font-size="8" fill="#1e40af" font-weight="600">📦 fichiers.pcap</text>
+  <text x="298" y="328" font-size="8" fill="#2563eb">📁 ./data/pcap/</text>
+
+  <!-- Card: ARPWatch -->
+  <rect x="504" y="178" width="210" height="164" rx="12" fill="white" stroke="#34d399" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="504" y="178" width="210" height="36" rx="12" fill="#d1fae5"/>
+  <rect x="504" y="202" width="210" height="12" fill="#d1fae5"/>
+  <text x="520" y="202" font-size="18">📡</text>
+  <text x="548" y="202" font-size="13" font-weight="700" fill="#065f46">ARPWatch</text>
+  <text x="548" y="216" font-size="9" fill="#059669">Surveillance MAC/IP</text>
+  <text x="518" y="238" font-size="9" fill="#064e3b">▸ Surveille les MAC/IP</text>
+  <text x="518" y="253" font-size="9" fill="#064e3b">▸ Détecte changements</text>
+  <text x="518" y="268" font-size="9" fill="#064e3b">▸ Alertes en JSON</text>
+  <rect x="518" y="280" width="182" height="18" rx="6" fill="#ecfdf5" stroke="#34d399" stroke-width="1"/>
+  <text x="609" y="293" text-anchor="middle" font-size="8" fill="#065f46" font-weight="600">📄 arpwatch.log</text>
+  <text x="518" y="328" font-size="8" fill="#059669">📁 ./data/logs/arpwatch/</text>
+
+  <!-- Card: pfSense (optional) -->
+  <rect x="734" y="178" width="320" height="164" rx="12" fill="white" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="6,3" filter="url(#cardShadow)"/>
+  <rect x="734" y="178" width="320" height="36" rx="12" fill="#ede9fe"/>
+  <rect x="734" y="202" width="320" height="12" fill="#ede9fe"/>
+  <text x="750" y="202" font-size="18">🛡️</text>
+  <text x="778" y="202" font-size="13" font-weight="700" fill="#5b21b6">pfSense</text>
+  <rect x="880" y="184" width="80" height="18" rx="9" fill="#f3e8ff" stroke="#c4b5fd" stroke-width="1"/>
+  <text x="920" y="197" text-anchor="middle" font-size="9" fill="#7c3aed">Optionnel</text>
+  <text x="748" y="238" font-size="9" fill="#4c1d95">▸ Firewall externe</text>
+  <text x="748" y="253" font-size="9" fill="#4c1d95">▸ Envoie logs via syslog</text>
+  <text x="748" y="268" font-size="9" fill="#4c1d95">▸ UDP:5140 → Filebeat</text>
+  <rect x="748" y="280" width="292" height="18" rx="6" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1"/>
+  <text x="894" y="293" text-anchor="middle" font-size="8" fill="#5b21b6" font-weight="600">🔌 syslog UDP:5140</text>
+
+  <!-- ═══ ARROWS Phase 1 → Phase 2 ═══ -->
+  <!-- Suricata → Filebeat -->
+  <path d="M154,342 C154,375 220,385 280,400" stroke="#fbbf24" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+  <!-- tcpdump → Arkime -->
+  <path d="M384,342 C384,370 560,385 560,400" stroke="#60a5fa" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+  <!-- ARPWatch → Filebeat -->
+  <path d="M609,342 C609,370 380,385 340,400" stroke="#34d399" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+  <!-- pfSense → Filebeat -->
+  <path d="M894,342 C894,370 420,385 370,400" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- PHASE 2 -->
+  <!-- ═══════════════════════════════ -->
+  <rect x="24" y="406" width="1052" height="212" rx="16" fill="url(#ph2bg)" stroke="#10b981" stroke-width="1.5" filter="url(#phaseShadow)"/>
+  <rect x="40" y="398" width="230" height="24" rx="12" fill="#10b981"/>
+  <text x="155" y="414" text-anchor="middle" font-size="11" font-weight="700" fill="white" letter-spacing="1">⚙️  PHASE 2 · ANALYSE &amp; INDEXATION</text>
+
+  <!-- Card: Filebeat -->
+  <rect x="44" y="422" width="310" height="182" rx="12" fill="white" stroke="#6ee7b7" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="44" y="422" width="310" height="36" rx="12" fill="#d1fae5"/>
+  <rect x="44" y="446" width="310" height="12" fill="#d1fae5"/>
+  <text x="64" y="447" font-size="18">📊</text>
+  <text x="92" y="447" font-size="13" font-weight="700" fill="#065f46">Filebeat</text>
+  <text x="92" y="461" font-size="9" fill="#059669">Log Shipper &amp; Pipeline</text>
+  <text x="58" y="482" font-size="9" fill="#064e3b">▸ Lit eve.json → Suricata</text>
+  <text x="58" y="497" font-size="9" fill="#064e3b">▸ Lit arpwatch.log → ARPWatch</text>
+  <text x="58" y="512" font-size="9" fill="#064e3b">▸ Reçoit syslog pfSense UDP:5140</text>
+  <text x="58" y="527" font-size="9" fill="#064e3b">▸ Parse, enrichit et envoie</text>
+  <text x="58" y="546" font-size="9" fill="#065f46" font-weight="700">Index générés :</text>
+  <rect x="58" y="552" width="136" height="16" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+  <text x="126" y="564" text-anchor="middle" font-size="7.5" fill="#065f46">suricata-YYYY.MM.DD</text>
+  <rect x="200" y="552" width="136" height="16" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+  <text x="268" y="564" text-anchor="middle" font-size="7.5" fill="#065f46">arpwatch-YYYY.MM.DD</text>
+  <rect x="58" y="574" width="136" height="16" rx="6" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+  <text x="126" y="586" text-anchor="middle" font-size="7.5" fill="#065f46">pfsense-YYYY.MM.DD</text>
+
+  <!-- Card: Arkime Engine -->
+  <rect x="374" y="422" width="280" height="182" rx="12" fill="white" stroke="#5eead4" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="374" y="422" width="280" height="36" rx="12" fill="#ccfbf1"/>
+  <rect x="374" y="446" width="280" height="12" fill="#ccfbf1"/>
+  <text x="394" y="447" font-size="18">🦈</text>
+  <text x="422" y="447" font-size="13" font-weight="700" fill="#134e4a">Arkime</text>
+  <text x="422" y="461" font-size="9" fill="#0d9488">Moteur d'analyse PCAP</text>
+  <text x="388" y="482" font-size="9" fill="#134e4a">▸ Lit fichiers PCAP depuis ./data/pcap/</text>
+  <text x="388" y="497" font-size="9" fill="#134e4a">▸ Décode tous les protocoles</text>
+  <text x="388" y="512" font-size="9" fill="#134e4a">▸ Reconstruit sessions TCP/UDP</text>
+  <text x="388" y="527" font-size="9" fill="#134e4a">▸ Extrait métadonnées complètes</text>
+  <text x="388" y="546" font-size="9" fill="#134e4a" font-weight="700">Index généré :</text>
+  <rect x="388" y="552" width="252" height="16" rx="6" fill="#f0fdfa" stroke="#5eead4" stroke-width="1"/>
+  <text x="514" y="564" text-anchor="middle" font-size="7.5" fill="#134e4a">arkime_sessions3-YYYY.MM.DD</text>
+
+  <!-- Card: Elasticsearch -->
+  <rect x="674" y="422" width="384" height="182" rx="12" fill="white" stroke="#fcd34d" stroke-width="2" filter="url(#cardShadow)"/>
+  <rect x="674" y="422" width="384" height="36" rx="12" fill="#fef9c3"/>
+  <rect x="674" y="446" width="384" height="12" fill="#fef9c3"/>
+  <text x="694" y="448" font-size="18">⚡</text>
+  <text x="724" y="448" font-size="14" font-weight="700" fill="#78350f">Elasticsearch</text>
+  <text x="724" y="462" font-size="9" fill="#b45309">Stockage Centralisé · Base NoSQL</text>
+  <text x="688" y="483" font-size="9" fill="#78350f">▸ Stockage centralisé de toutes les données</text>
+  <text x="688" y="498" font-size="9" fill="#78350f">▸ Index multiples par type de source</text>
+  <text x="688" y="513" font-size="9" fill="#78350f">▸ Recherche full-text ultra-rapide</text>
+  <text x="688" y="528" font-size="9" fill="#78350f">▸ Agrégations &amp; statistiques temps réel</text>
+  <text x="688" y="547" font-size="9" fill="#78350f" font-weight="700">Tous les index :</text>
+  <rect x="688" y="553" width="110" height="16" rx="6" fill="#fefce8" stroke="#fcd34d" stroke-width="1"/>
+  <text x="743" y="565" text-anchor="middle" font-size="7.5" fill="#78350f">suricata-*</text>
+  <rect x="806" y="553" width="110" height="16" rx="6" fill="#fefce8" stroke="#fcd34d" stroke-width="1"/>
+  <text x="861" y="565" text-anchor="middle" font-size="7.5" fill="#78350f">arpwatch-*</text>
+  <rect x="688" y="575" width="110" height="16" rx="6" fill="#fefce8" stroke="#fcd34d" stroke-width="1"/>
+  <text x="743" y="587" text-anchor="middle" font-size="7.5" fill="#78350f">pfsense-*</text>
+  <rect x="806" y="575" width="240" height="16" rx="6" fill="#fefce8" stroke="#fcd34d" stroke-width="1"/>
+  <text x="926" y="587" text-anchor="middle" font-size="7.5" fill="#78350f">arkime_sessions3-*</text>
+
+  <!-- Arrows Filebeat → Elasticsearch -->
+  <line x1="354" y1="513" x2="674" y2="513" stroke="#10b981" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <!-- Arkime → Elasticsearch -->
+  <line x1="654" y1="513" x2="674" y2="513" stroke="#10b981" stroke-width="2"/>
+
+  <!-- ═══ ARROWS Phase 2 → Phase 3 ═══ -->
+  <!-- Kibana -->
+  <path d="M790,604 C790,628 300,638 300,654" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <!-- Arkime UI -->
+  <path d="M820,604 C820,630 630,638 620,654" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+  <!-- NGINX -->
+  <path d="M860,604 C860,632 900,638 900,654" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowPurple)"/>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- PHASE 3 -->
+  <!-- ═══════════════════════════════ -->
+  <rect x="24" y="658" width="1052" height="146" rx="16" fill="url(#ph3bg)" stroke="#8b5cf6" stroke-width="1.5" filter="url(#phaseShadow)"/>
+  <rect x="40" y="650" width="220" height="24" rx="12" fill="#8b5cf6"/>
+  <text x="150" y="666" text-anchor="middle" font-size="11" font-weight="700" fill="white" letter-spacing="1">👁️  PHASE 3 · VISUALISATION</text>
+
+  <!-- Card: Kibana -->
+  <rect x="44" y="672" width="310" height="120" rx="12" fill="white" stroke="#c4b5fd" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="44" y="672" width="310" height="36" rx="12" fill="#ede9fe"/>
+  <rect x="44" y="696" width="310" height="12" fill="#ede9fe"/>
+  <text x="64" y="697" font-size="18">📈</text>
+  <text x="95" y="697" font-size="13" font-weight="700" fill="#4c1d95">Kibana</text>
+  <rect x="260" y="680" width="76" height="18" rx="9" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+  <text x="298" y="693" text-anchor="middle" font-size="9" fill="#6d28d9">port :5601</text>
+  <text x="58" y="722" font-size="9" fill="#4c1d95">▸ Dashboards Suricata IDS/IPS</text>
+  <text x="58" y="737" font-size="9" fill="#4c1d95">▸ Alertes sécurité &amp; DNS/HTTP/TLS</text>
+  <text x="58" y="752" font-size="9" fill="#4c1d95">▸ Corrélation ARPWatch / pfSense</text>
+  <rect x="58" y="770" width="280" height="16" rx="6" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+  <text x="198" y="782" text-anchor="middle" font-size="8" fill="#4c1d95" font-weight="600">🎯 Détection &amp; Corrélation des menaces</text>
+
+  <!-- Card: Arkime UI -->
+  <rect x="374" y="672" width="310" height="120" rx="12" fill="white" stroke="#5eead4" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="374" y="672" width="310" height="36" rx="12" fill="#ccfbf1"/>
+  <rect x="374" y="696" width="310" height="12" fill="#ccfbf1"/>
+  <text x="394" y="697" font-size="18">🦈</text>
+  <text x="425" y="697" font-size="13" font-weight="700" fill="#134e4a">Arkime Interface</text>
+  <rect x="588" y="680" width="76" height="18" rx="9" fill="#f0fdfa" stroke="#5eead4" stroke-width="1"/>
+  <text x="626" y="693" text-anchor="middle" font-size="9" fill="#0d9488">port :8005</text>
+  <text x="388" y="722" font-size="9" fill="#134e4a">▸ Analyse PCAP &amp; reconstruction sessions</text>
+  <text x="388" y="737" font-size="9" fill="#134e4a">▸ Recherche IP / port / protocole</text>
+  <text x="388" y="752" font-size="9" fill="#134e4a">▸ Export PCAP · Graphes de connexions</text>
+  <rect x="388" y="770" width="280" height="16" rx="6" fill="#f0fdfa" stroke="#5eead4" stroke-width="1"/>
+  <text x="528" y="782" text-anchor="middle" font-size="8" fill="#134e4a" font-weight="600">🔬 Investigation &amp; Forensique réseau</text>
+
+  <!-- Card: NGINX -->
+  <rect x="704" y="672" width="200" height="120" rx="12" fill="white" stroke="#86efac" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="704" y="672" width="200" height="36" rx="12" fill="#dcfce7"/>
+  <rect x="704" y="696" width="200" height="12" fill="#dcfce7"/>
+  <text x="720" y="697" font-size="18">🌐</text>
+  <text x="750" y="697" font-size="13" font-weight="700" fill="#14532d">NGINX</text>
+  <rect x="820" y="680" width="60" height="18" rx="9" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+  <text x="850" y="693" text-anchor="middle" font-size="9" fill="#166534">port :80</text>
+  <text x="718" y="722" font-size="9" fill="#14532d">▸ Page d'accueil NSOC</text>
+  <text x="718" y="737" font-size="9" fill="#14532d">▸ Liens → Kibana / Arkime</text>
+  <text x="718" y="752" font-size="9" fill="#14532d">▸ Statut des services</text>
+  <rect x="718" y="770" width="172" height="16" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+  <text x="804" y="782" text-anchor="middle" font-size="8" fill="#14532d" font-weight="600">🚪 Portail d'accès unifié</text>
+
+  <!-- Complementarity note -->
+  <rect x="924" y="672" width="140" height="120" rx="12" fill="#fffbeb" stroke="#fcd34d" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <text x="994" y="694" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">💡 Complémentarité</text>
+  <line x1="934" y1="700" x2="1054" y2="700" stroke="#fde68a" stroke-width="1"/>
+  <text x="934" y="716" font-size="8" fill="#92400e" font-weight="700">Suricata</text>
+  <text x="934" y="729" font-size="7.5" fill="#b45309">→ Détecte les menaces</text>
+  <text x="934" y="742" font-size="7.5" fill="#b45309">→ Alertes IDS/IPS</text>
+  <line x1="934" y1="750" x2="1054" y2="750" stroke="#fde68a" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="934" y="764" font-size="8" fill="#065f46" font-weight="700">Arkime</text>
+  <text x="934" y="777" font-size="7.5" fill="#0d9488">→ Investigate incidents</text>
+  <text x="934" y="790" font-size="7.5" fill="#0d9488">→ Forensique PCAP</text>
+
+  <!-- ═══ FOOTER ═══ -->
+  <rect x="0" y="810" width="1100" height="10" fill="url(#headerGrad)" opacity="0.4"/>
+  <text x="550" y="808" text-anchor="middle" font-size="9" fill="#94a3b8">NSOC — Network Security Operations Center · Architecture complète de surveillance réseau</text>
+
+</svg>

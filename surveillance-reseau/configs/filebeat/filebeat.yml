@@ -54,13 +54,12 @@ filebeat.inputs:
       log_type: generic
     fields_under_root: true
 
-# ============================================
 # Output vers Elasticsearch
 # ============================================
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
   username: "elastic"
-  password: "passer"
+  password: "${ELASTICSEARCH_PASSWORD}"
   indices:
     - index: "suricata-%{+yyyy.MM.dd}"
       when.equals:

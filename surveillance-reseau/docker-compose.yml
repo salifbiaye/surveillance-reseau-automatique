@@ -25,8 +25,10 @@ services:
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - ./data/elasticsearch:/usr/share/elasticsearch/data
     ports:
@@ -38,7 +40,7 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      test: ["CMD-SHELL", "curl -u elastic:${ELASTIC_PASSWORD} -f http://localhost:9200/_cluster/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -51,8 +53,12 @@ services:
     container_name: surveillance-kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - SERVER_NAME=surveillance-kibana
       - SERVER_HOST=0.0.0.0
+      - XPACK_SECURITY_ENABLED=true
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=a7a6311933d3503b89bc2dbc36572c33a6c10925682e591bffcab6911c06786d
     ports:
       - "5601:5601"
     networks:
@@ -155,6 +161,9 @@ services:
     image: docker.elastic.co/beats/filebeat:8.11.0
     container_name: surveillance-filebeat
     user: root
+    environment:
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - ./configs/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./data/logs:/data/logs:ro
@@ -172,6 +181,51 @@ services:
     restart: unless-stopped
 
   # ============================================
+  # ARKIME - Analyse et visualisation PCAP
+  # ============================================
+  arkime:
+    image: arkime/arkime:latest
+    container_name: surveillance-arkime
+    environment:
+      - ARKIME_INTERFACE=eth0
+      - ARKIME_PASSWORD=${ARKIME_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - ./data/pcap:/data/pcap:ro
+      - ./configs/arkime:/opt/arkime/etc/custom:ro
+      - arkime-data:/opt/arkime/raw
+      - ./scripts/init-arkime.sh:/init-arkime.sh:ro
+    ports:
+      - "8005:8005"
+    networks:
+      - surveillance-net
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    entrypoint: ["/bin/bash", "/init-arkime.sh"]
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  # ============================================
+  # STATUS API - Backend pour statuts Docker
+  # ============================================
+  status-api:
+    image: python:3.11-alpine
+    container_name: surveillance-status-api
+    volumes:
+      - ./api:/app
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    working_dir: /app
+    command: python status.py
+    ports:
+      - "8888:8888"
+    networks:
+      - surveillance-net
+    restart: unless-stopped
+
+  # ============================================
   # NGINX - Page d'accueil
   # ============================================
   nginx:
@@ -186,6 +240,7 @@ services:
       - surveillance-net
     depends_on:
       - kibana
+      - arkime
     restart: unless-stopped
 
   # ============================================
@@ -213,3 +268,4 @@ networks:
 
 volumes:
   elasticsearch-data:
+  arkime-data:

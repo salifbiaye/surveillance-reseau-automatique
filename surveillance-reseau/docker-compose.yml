@@ -204,6 +204,7 @@ services:
       - ARKIME_CREATEADMINUSER=true
       - ARKIME_ADMINCREDS=admin:${ARKIME_PASSWORD}
       - ARKIME_USERNAMEHEADER=
+      - ARKIME_TRUSTPROXY=true
     volumes:
       - ./data/pcap:/data/pcap:ro
       - arkime-data:/data/moloch/raw

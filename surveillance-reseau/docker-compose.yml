@@ -183,6 +183,7 @@ services:
   # ============================================
   # ARKIME - Analyse et visualisation PCAP
   # ============================================
+  
   arkime:
     image: mosajjal/arkime:v5.0.1
     container_name: surveillance-arkime
@@ -201,8 +202,7 @@ services:
     volumes:
       - ./data/pcap:/data/pcap:ro
       - arkime-data:/data/moloch/raw
-    ports:
-      # Pas de port exposé directement, accès via NGINX proxy
+    # Pas de port exposé directement, accès via NGINX proxy
     networks:
       - surveillance-net
     depends_on:

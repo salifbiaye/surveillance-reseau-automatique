@@ -994,8 +994,8 @@
 
         async function fetchRecentActivity() {
             try {
-                // Get recent Suricata events from Elasticsearch
-                const response = await fetch('http://localhost:9200/suricata-*/_search', {
+                // Get recent Suricata events from Elasticsearch via NGINX proxy
+                const response = await fetch('/elasticsearch/suricata-*/_search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

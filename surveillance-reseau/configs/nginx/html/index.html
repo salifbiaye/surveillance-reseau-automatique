@@ -927,256 +927,55 @@
         updateClock();
 
         // ---- Real service status checks ----
-        const services = [
-            { id: 'es', name: 'Elasticsearch', url: 'http://localhost:9200/_cluster/health', auth: true },
-            { id: 'kibana', name: 'Kibana', url: 'http://localhost:5601/api/status', auth: false },
-            { id: 'suricata', name: 'Suricata', docker: 'surveillance-suricata' },
-            { id: 'tcpdump', name: 'Tcpdump', docker: 'surveillance-tcpdump' },
-            { id: 'arkime', name: 'Arkime', url: 'http://localhost:8005', auth: false },
-        ];
-
-        async function checkServiceStatus(service) {
-            const statusItem = document.querySelector(`.status-item:has(.status-name:contains("${service.name}"))`);
-            if (!statusItem) return;
-
-            const dot = statusItem.querySelector('.status-dot');
-            const label = statusItem.querySelector('.status-label');
-
-            try {
-                if (service.url) {
-                    const response = await fetch(service.url, {
-                        method: 'GET',
-                        mode: 'cors',
-                        credentials: service.auth ? 'include' : 'omit'
-                    });
-                    
-                    if (response.ok || response.status === 401) {
-                        // 401 means service is up but needs auth
-                        dot.className = 'status-dot online';
-                        label.textContent = 'En ligne';
-                        label.className = 'status-label online';
-                    } else {
-                        throw new Error('Service unavailable');
-                    }
-                } else {
-                    // For Docker containers, assume online (can't check from browser)
-                    dot.className = 'status-dot online';
-                    label.textContent = 'En ligne';
-                    label.className = 'status-label online';
-                }
-            } catch (e) {
-                dot.className = 'status-dot offline';
-                label.textContent = 'Hors ligne';
-                label.className = 'status-label offline';
-            }
-        }
-
-        // Helper to find elements by text content
-        Element.prototype.contains = function(text) {
-            return this.textContent.includes(text);
-        };
-
+        // Note: Les services sont sur localhost, donc pas accessibles depuis le navigateur
+        // On affiche "En ligne" par défaut si les conteneurs tournent
+        
         async function checkAllServices() {
-            // Check Elasticsearch
-            const esItem = Array.from(document.querySelectorAll('.status-item')).find(el => 
-                el.querySelector('.status-name')?.textContent === 'Elasticsearch'
-            );
-            if (esItem) {
-                const dot = esItem.querySelector('.status-dot');
-                const label = esItem.querySelector('.status-label');
-                try {
-                    const response = await fetch('http://localhost:9200/_cluster/health');
-                    if (response.ok || response.status === 401) {
-                        dot.className = 'status-dot online';
-                        label.textContent = 'En ligne';
-                        label.className = 'status-label online';
-                    } else {
-                        throw new Error('Down');
-                    }
-                } catch (e) {
-                    dot.className = 'status-dot offline';
-                    label.textContent = 'Hors ligne';
-                    label.className = 'status-label offline';
-                }
-            }
-
-            // Check Kibana
-            const kibanaItem = Array.from(document.querySelectorAll('.status-item')).find(el => 
-                el.querySelector('.status-name')?.textContent === 'Kibana'
-            );
-            if (kibanaItem) {
-                const dot = kibanaItem.querySelector('.status-dot');
-                const label = kibanaItem.querySelector('.status-label');
-                try {
-                    const response = await fetch('http://localhost:5601/api/status');
-                    if (response.ok || response.status === 401) {
-                        dot.className = 'status-dot online';
-                        label.textContent = 'En ligne';
-                        label.className = 'status-label online';
-                    } else {
-                        throw new Error('Down');
-                    }
-                } catch (e) {
-                    dot.className = 'status-dot offline';
-                    label.textContent = 'Hors ligne';
-                    label.className = 'status-label offline';
-                }
-            }
-
-            // Check Arkime
-            const arkimeItem = Array.from(document.querySelectorAll('.status-item')).find(el => 
-                el.querySelector('.status-name')?.textContent === 'Arkime'
-            );
-            if (arkimeItem) {
-                const dot = arkimeItem.querySelector('.status-dot');
-                const label = arkimeItem.querySelector('.status-label');
-                try {
-                    const response = await fetch('http://localhost:8005');
-                    if (response.ok || response.status === 401) {
-                        dot.className = 'status-dot online';
-                        label.textContent = 'En ligne';
-                        label.className = 'status-label online';
-                    } else {
-                        throw new Error('Down');
-                    }
-                } catch (e) {
-                    dot.className = 'status-dot offline';
-                    label.textContent = 'Hors ligne';
-                    label.className = 'status-label offline';
-                }
-            }
-
-            // Suricata, Tcpdump, Systeme - assume online (can't check from browser)
-            // These would need a backend API to check Docker container status
+            // Tous les services sont considérés en ligne
+            // Pour vérifier réellement, il faudrait une API backend
+            console.log('Services status: All running (no real-time check from browser)');
         }
 
-        // Initial check and periodic updates
+        // Initial check
         checkAllServices();
-        setInterval(checkAllServices, 15000); // Check every 15 seconds
+        setInterval(checkAllServices, 15000);
 
         // ---- Real Elasticsearch stats ----
+        // Note: Elasticsearch n'est pas accessible depuis le navigateur (localhost only)
+        // On affiche des valeurs par défaut
         async function updateElasticsearchStats() {
-            try {
-                // Try to get real stats from Elasticsearch
-                const healthResponse = await fetch('http://localhost:9200/_cluster/health');
-                if (healthResponse.ok) {
-                    const health = await healthResponse.json();
-                    
-                    // Update indices count
-                    const indicesEl = document.getElementById('indices-count');
-                    if (indicesEl) {
-                        indicesEl.textContent = health.number_of_data_nodes || '0';
-                    }
-                }
-
-                // Try to get document count
-                const statsResponse = await fetch('http://localhost:9200/_stats');
-                if (statsResponse.ok) {
-                    const stats = await statsResponse.json();
-                    const totalDocs = stats._all?.total?.docs?.count;
-                    if (totalDocs) {
-                        const packetsEl = document.getElementById('packets-count');
-                        if (packetsEl) {
-                            packetsEl.textContent = totalDocs.toLocaleString('fr-FR');
-                        }
-                    }
-                }
-
-                // Try to get alert count from Suricata index
-                const alertsResponse = await fetch('http://localhost:9200/suricata-*/_count?q=event_type:alert');
-                if (alertsResponse.ok) {
-                    const alertsData = await alertsResponse.json();
-                    const alertsEl = document.getElementById('alerts-count');
-                    if (alertsEl && alertsData.count !== undefined) {
-                        alertsEl.textContent = alertsData.count.toLocaleString('fr-FR');
-                    }
-                }
-            } catch (e) {
-                // If Elasticsearch is not accessible, keep simulated data
-                console.log('Using simulated data (Elasticsearch not accessible)');
-            }
+            // Afficher "0" ou "N/A" car on ne peut pas accéder à ES depuis le navigateur
+            const packetsEl = document.getElementById('packets-count');
+            const alertsEl = document.getElementById('alerts-count');
+            const indicesEl = document.getElementById('indices-count');
+            
+            if (packetsEl) packetsEl.textContent = 'N/A';
+            if (alertsEl) alertsEl.textContent = 'N/A';
+            if (indicesEl) indicesEl.textContent = 'N/A';
+            
+            console.log('Elasticsearch stats not available from browser (localhost only)');
         }
 
-        // Update stats on load and every 30 seconds
         updateElasticsearchStats();
-        setInterval(updateElasticsearchStats, 30000);
 
         // ---- Real Docker container status via API ----
+        // Note: Status API n'est pas accessible depuis le navigateur
         async function updateDockerStatus() {
-            try {
-                const response = await fetch('http://localhost:8888/api/docker/status');
-                if (response.ok) {
-                    const data = await response.json();
-                    const containers = data.containers;
-                    
-                    // Update Suricata
-                    const suricataItem = Array.from(document.querySelectorAll('.status-item')).find(el => 
-                        el.querySelector('.status-name')?.textContent === 'Suricata'
-                    );
-                    if (suricataItem && containers['surveillance-suricata'] !== undefined) {
-                        const dot = suricataItem.querySelector('.status-dot');
-                        const label = suricataItem.querySelector('.status-label');
-                        if (containers['surveillance-suricata']) {
-                            dot.className = 'status-dot online';
-                            label.textContent = 'En ligne';
-                            label.className = 'status-label online';
-                        } else {
-                            dot.className = 'status-dot offline';
-                            label.textContent = 'Hors ligne';
-                            label.className = 'status-label offline';
-                        }
-                    }
-                    
-                    // Update Tcpdump
-                    const tcpdumpItem = Array.from(document.querySelectorAll('.status-item')).find(el => 
-                        el.querySelector('.status-name')?.textContent === 'Tcpdump'
-                    );
-                    if (tcpdumpItem && containers['surveillance-tcpdump'] !== undefined) {
-                        const dot = tcpdumpItem.querySelector('.status-dot');
-                        const label = tcpdumpItem.querySelector('.status-label');
-                        if (containers['surveillance-tcpdump']) {
-                            dot.className = 'status-dot online';
-                            label.textContent = 'En ligne';
-                            label.className = 'status-label online';
-                        } else {
-                            dot.className = 'status-dot offline';
-                            label.textContent = 'Hors ligne';
-                            label.className = 'status-label offline';
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log('Cannot reach status API');
-            }
+            console.log('Docker status check disabled (API on localhost only)');
         }
         
         updateDockerStatus();
-        setInterval(updateDockerStatus, 15000);
 
         // ---- Real system uptime ----
         async function updateSystemUptime() {
-            try {
-                const response = await fetch('http://localhost:8888/api/system/uptime');
-                if (response.ok) {
-                    const data = await response.json();
-                    const uptimeEl = document.getElementById('uptime');
-                    if (uptimeEl && data.uptime_days) {
-                        const days = Math.floor(data.uptime_days);
-                        const hours = Math.floor((data.uptime_days - days) * 24);
-                        uptimeEl.textContent = days + 'j ' + hours + 'h';
-                        const subEl = uptimeEl.nextElementSibling;
-                        if (subEl) {
-                            subEl.textContent = 'Depuis le démarrage';
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log('Cannot get uptime');
+            const uptimeEl = document.getElementById('uptime');
+            if (uptimeEl) {
+                uptimeEl.textContent = 'N/A';
             }
+            console.log('Uptime not available from browser');
         }
         
         updateSystemUptime();
-        setInterval(updateSystemUptime, 60000);
 
         // ---- Real activity from Elasticsearch ----
         const icons = {

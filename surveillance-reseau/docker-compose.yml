@@ -197,11 +197,12 @@ services:
       - ARKIME_AUTOINIT=true
       - ARKIME_CREATEADMINUSER=true
       - ARKIME_ADMINCREDS=admin:${ARKIME_PASSWORD}
+      - ARKIME_USERNAMEHEADER=
     volumes:
       - ./data/pcap:/data/pcap:ro
       - arkime-data:/data/moloch/raw
     ports:
-      - "127.0.0.1:8005:8005"
+      - "8005:8005"  # Accessible depuis le réseau
     networks:
       - surveillance-net
     depends_on:

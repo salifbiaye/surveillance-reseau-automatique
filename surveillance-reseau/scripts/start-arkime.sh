@@ -13,3 +13,4 @@ fi
 
 # Lancer Arkime normalement
 exec "$@"
+

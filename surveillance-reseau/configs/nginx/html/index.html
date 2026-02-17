@@ -979,10 +979,14 @@
         setInterval(checkAllServices, 15000);
 
         // ---- Real Elasticsearch stats ----
+        const esAuth = btoa('elastic:changeme'); // Base64 encode credentials
+        
         async function updateElasticsearchStats() {
             try {
                 // Get total document count - handle case where no indices exist yet
-                const countResponse = await fetch('/elasticsearch/_cat/count/suricata-*?format=json');
+                const countResponse = await fetch('/elasticsearch/_cat/count/suricata-*?format=json', {
+                    headers: { 'Authorization': 'Basic ' + esAuth }
+                });
                 if (countResponse.ok) {
                     const countData = await countResponse.json();
                     const totalDocs = countData[0]?.count || '0';
@@ -994,7 +998,10 @@
                 // Get alert count - handle case where no indices exist yet
                 const alertResponse = await fetch('/elasticsearch/suricata-*/_count', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + esAuth
+                    },
                     body: JSON.stringify({
                         query: { term: { 'event_type': 'alert' }}
                     })
@@ -1007,7 +1014,9 @@
                 }
 
                 // Get indices count
-                const indicesResponse = await fetch('/elasticsearch/_cat/indices/suricata-*?format=json');
+                const indicesResponse = await fetch('/elasticsearch/_cat/indices/suricata-*?format=json', {
+                    headers: { 'Authorization': 'Basic ' + esAuth }
+                });
                 if (indicesResponse.ok) {
                     const indicesData = await indicesResponse.json();
                     document.getElementById('indices-count').textContent = indicesData.length;
@@ -1078,7 +1087,10 @@
                 // Get recent Suricata events from Elasticsearch via NGINX proxy
                 const response = await fetch('/elasticsearch/suricata-*/_search', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + esAuth
+                    },
                     body: JSON.stringify({
                         size: 20,
                         sort: [{ '@timestamp': { order: 'desc' }}],

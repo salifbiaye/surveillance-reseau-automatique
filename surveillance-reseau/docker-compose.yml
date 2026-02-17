@@ -244,7 +244,7 @@ services:
       - ./configs/nginx/html:/usr/share/nginx/html:ro
     ports:
       - "80:80"
-      - "127.0.0.1:8105:8005"  # Proxy Arkime
+      - "127.0.0.1:8005:8005"  # Proxy Arkime
     networks:
       - surveillance-net
     depends_on:

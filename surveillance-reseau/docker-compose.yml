@@ -200,15 +200,14 @@ services:
       - ARKIME_PASSWORDSECRET=SuperSecretPasswordForArkime2024!
       - ARKIME_VIEWPORT=8005
       - ARKIME_VIEWHOST=0.0.0.0
-      - ARKIME_AUTOINIT=false
-      - ARKIME_CREATEADMINUSER=false
+      - ARKIME_AUTOINIT=true
+      - ARKIME_CREATEADMINUSER=true
       - ARKIME_ADMINCREDS=admin:${ARKIME_PASSWORD}
       - ARKIME_USERNAMEHEADER=
       - ARKIME_TRUSTPROXY=true
       - ARKIME_USERAUTHIPS=0.0.0.0/0
     volumes:
       - ./data/pcap:/data/pcap:ro
-      - ./configs/arkime/config-custom.ini:/opt/arkime/etc/config.ini:ro
       - arkime-data:/data/moloch/raw
     restart: unless-stopped
     cap_add:

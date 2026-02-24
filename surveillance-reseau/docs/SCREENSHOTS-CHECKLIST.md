@@ -210,37 +210,37 @@ V1 — Démarrage Docker
    → Depuis Ubuntu NSOC: docker compose up -d
    → Montrer: téléchargement images, démarrage containers
    → Terminer sur: docker compose ps (tous UP)
-   → Upload → remplacer [LIEN_VIDEO_1]
+   → Lien: https://drive.google.com/file/d/1C6cFiyPUT6xF9mQsXnIZZO_VtcaFRSdg/view?usp=sharing
 
 V2 — Connexion client via enseigne
    → Machine cliente: ouvrir navigateur
    → Naviguer vers http://192.168.1.100
    → Montrer l'enseigne légale, puis la page d'accueil NSOC
-   → Upload → remplacer [LIEN_VIDEO_2]
+   → Lien: https://drive.google.com/file/d/1BFD2yxSL5Ewzo3hR0VlxVSrHhWvuiEWZ/view?usp=sharing
 
 V3 — Kibana events en temps réel
    → Kibana Discover → suricata-*
    → Filtrer successivement: dns, tls, alert
    → Montrer les champs, les volumes d'events
-   → Upload → remplacer [LIEN_VIDEO_3]
+   → Lien: https://drive.google.com/file/d/1edsoMSsD29oPZrCvWZfDR1OvNWIsvQlF/view?usp=drive_link
 
 V4 — Arkime PCAP
    → http://192.168.1.100:8005
    → Montrer la liste des sessions
    → Cliquer sur une session → détail paquet
-   → Upload → remplacer [LIEN_VIDEO_4]
+   → Lien: https://drive.google.com/file/d/13lY-yqm7IhCPP3bwPHHnZUO79UXNN-o3/view?usp=drive_link
 
 V5 — Alerte Suricata en direct
    → Deux fenêtres: terminal client + Kibana
    → Client: curl http://testmyids.com
    → Kibana: voir l'alerte apparaître (event_type: alert)
-   → Upload → remplacer [LIEN_VIDEO_5]
+   → Lien: https://drive.google.com/file/d/1nV1J8AEcqiTDTcOEsJcAxU81DvwLGSYR/view?usp=drive_link
 
 V6 — Dashboard avec trafic client
    → Client génère du trafic (curl, nslookup)
    → Kibana Dashboard en temps réel: logs apparaissent
    → Montrer la corrélation trafic ↔ events Kibana
-   → Upload → remplacer [LIEN_VIDEO_6]
+   → Lien: https://drive.google.com/file/d/16mRnaiE0Jc_1Nl07DOWXne9ULi6ymKjW/view?usp=drive_link
 ```
 
 ---
@@ -256,7 +256,7 @@ V6 — Dashboard avec trafic client
 
 ---
 
-> ⚠️ **ATTENTION :** Après upload des vidéos sur Google Drive / YouTube, remplacer tous les `[LIEN_VIDEO_X]` dans `architecture-publique.md` et `installation-privee.md` par les vraies URLs.
+> ✅ **FAIT :** Les liens vidéo Google Drive sont déjà intégrés dans `architecture-publique.md` et `installation-privee.md`.
 
 ---
 

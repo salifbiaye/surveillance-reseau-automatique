@@ -93,7 +93,7 @@ Système de surveillance réseau complet pour la capture, l'analyse, la détecti
 
 ### Page d'accueil du NSOC
 
-![Dashboard Nginx NSOC](../../images/nsoc-dashboard.png)
+![Dashboard Nginx NSOC](../../../images/nsoc-dashboard.png)
 
 > 💡 **INFO :** La page d'accueil Nginx (port 80) centralise les liens vers tous les services de la plateforme : Kibana, Arkime, Portainer, API Status et l'enseigne légale.
 
@@ -109,14 +109,12 @@ Système de surveillance réseau complet pour la capture, l'analyse, la détecti
 
 | # | Vidéo | Description | Lien |
 |---|-------|-------------|------|
-| **V1** | Démarrage `docker compose up -d` | Stack qui démarre, 12 containers UP | [▶️ Regarder][LIEN_VIDEO_1] |
-| **V2** | Client → pfSense → enseigne NSOC | Client se connecte, voit l'enseigne | [▶️ Regarder][LIEN_VIDEO_2] |
-| **V3** | Kibana — 3 types d'events en temps réel | Navigation dns/tls/alert + filtrage KQL | [▶️ Regarder][LIEN_VIDEO_3] |
-| **V4** | Arkime — analyse PCAP | Sessions, inspection paquet, filtres | [▶️ Regarder][LIEN_VIDEO_4] |
-| **V5** | Alerte Suricata en direct | `curl testmyids.com` → alerte Kibana | [▶️ Regarder][LIEN_VIDEO_5] |
-| **V6** | Dashboard Kibana avec trafic client | Trafic client → logs en temps réel | [▶️ Regarder][LIEN_VIDEO_6] |
-
-> ⚠️ **ATTENTION :** Remplacer les `[LIEN_VIDEO_X]` par les URLs Google Drive / YouTube après upload.
+| **V1** | Démarrage `docker compose up -d` | Stack qui démarre, 12 containers UP | [▶️ Regarder](https://drive.google.com/file/d/1C6cFiyPUT6xF9mQsXnIZZO_VtcaFRSdg/view?usp=sharing) |
+| **V2** | Client → pfSense → enseigne NSOC | Client se connecte, voit l'enseigne | [▶️ Regarder](https://drive.google.com/file/d/1BFD2yxSL5Ewzo3hR0VlxVSrHhWvuiEWZ/view?usp=sharing) |
+| **V3** | Kibana — 3 types d'events en temps réel | Navigation dns/tls/alert + filtrage KQL | [▶️ Regarder](https://drive.google.com/file/d/1edsoMSsD29oPZrCvWZfDR1OvNWIsvQlF/view?usp=drive_link) |
+| **V4** | Arkime — analyse PCAP | Sessions, inspection paquet, filtres | [▶️ Regarder](https://drive.google.com/file/d/13lY-yqm7IhCPP3bwPHHnZUO79UXNN-o3/view?usp=drive_link) |
+| **V5** | Alerte Suricata en direct | `curl testmyids.com` → alerte Kibana | [▶️ Regarder](https://drive.google.com/file/d/1nV1J8AEcqiTDTcOEsJcAxU81DvwLGSYR/view?usp=drive_link) |
+| **V6** | Dashboard Kibana avec trafic client | Trafic client → logs en temps réel | [▶️ Regarder](https://drive.google.com/file/d/16mRnaiE0Jc_1Nl07DOWXne9ULi6ymKjW/view?usp=drive_link) |
 
 > 💡 **INFO :** Recommandation — Regardez V1 et V3 en premier pour comprendre le démarrage et les événements Kibana.
 
@@ -145,7 +143,7 @@ Système de surveillance réseau complet pour la capture, l'analyse, la détecti
 
 ### Vue Portainer — Containers Actifs
 
-![Portainer — liste des 12 containers UP](../../images/portainer-containers.png)
+![Portainer — liste des 12 containers UP](../../../images/portainer-containers.png)
 
 > ✅ **SUCCÈS :** La stack complète est opérationnelle avec 12 services tous en état `UP`.
 
@@ -154,6 +152,10 @@ Système de surveillance réseau complet pour la capture, l'analyse, la détecti
 <div style="page-break-after: always;"></div>
 
 ## 🏗️ Architecture
+
+### Diagramme d'Architecture
+
+![Architecture NSOC](../architecture-nsoc-friendly.svg)
 
 ### Schéma Global — 4 Couches
 
@@ -410,15 +412,15 @@ event_type: "flow"   → Métadonnées de flux réseau
 
 **Kibana — Events Suricata : DNS** (`suricata-*` | `event_type: "dns"`)
 
-![Kibana — Events Suricata dns](../../images/kibana-suricata-dns.png)
+![Kibana — Events Suricata dns](../../../images/kibana-suricata-dns.png)
 
 **Kibana — Events Suricata : TLS** (`suricata-*` | `event_type: "tls"`)
 
-![Kibana — Events Suricata tls](../../images/kibana-suricata-tls.png)
+![Kibana — Events Suricata tls](../../../images/kibana-suricata-tls.png)
 
 **Kibana — Events Suricata : Alertes IDS** (`suricata-*` | `event_type: "alert"`)
 
-![Kibana — Events Suricata alert](../../images/kibana-suricata-alert.png)
+![Kibana — Events Suricata alert](../../../images/kibana-suricata-alert.png)
 
 **Commandes utiles :**
 ```bash
@@ -455,11 +457,11 @@ tail -f data/logs/suricata/eve.json | jq 'select(.event_type=="alert")'
 
 **Vue Sessions Arkime :**
 
-![Arkime — liste des sessions PCAP](../../images/arkime-sessions.png)
+![Arkime — liste des sessions PCAP](../../../images/arkime-sessions.png)
 
 **Vue Détail Session :**
 
-![Arkime — détail d'une session](../../images/arkime-detail.png)
+![Arkime — détail d'une session](../../../images/arkime-detail.png)
 
 **Requêtes Arkime (exemples) :**
 ```
@@ -540,11 +542,11 @@ curl http://192.168.1.100/enseigne.html
 
 **Dashboard personnalisé #1 :**
 
-![Kibana — Dashboard #1](../../images/kibana-dashboard-1.png)
+![Kibana — Dashboard #1](../../../images/kibana-dashboard-1.png)
 
 **Dashboard personnalisé #2 :**
 
-![Kibana — Dashboard #2](../../images/kibana-dashboard-2.png)
+![Kibana — Dashboard #2](../../../images/kibana-dashboard-2.png)
 
 **Les 3 sources d'events dans Kibana :**
 
@@ -558,19 +560,19 @@ curl http://192.168.1.100/enseigne.html
 
 **Kibana — Events ARPWatch** (`arpwatch-*`)
 
-![Kibana — Events ARPWatch](../../images/kibana-arpwatch-events.png)
+![Kibana — Events ARPWatch](../../../images/kibana-arpwatch-events.png)
 
 **Kibana — Logs pfSense Firewall** (`pfsense-*`)
 
-![Kibana — Logs pfSense](../../images/kibana-pfsense-events.png)
+![Kibana — Logs pfSense](../../../images/kibana-pfsense-events.png)
 
 **Dashboard Kibana — Vue d'ensemble**
 
-![Kibana — Dashboard global](../../images/kibana-dashboard-1.png)
+![Kibana — Dashboard global](../../../images/kibana-dashboard-1.png)
 
 **Dashboard Kibana — Alertes IDS**
 
-![Kibana — Dashboard alertes](../../images/kibana-dashboard-2.png)
+![Kibana — Dashboard alertes](../../../images/kibana-dashboard-2.png)
 
 **Recherches KQL par index :**
 

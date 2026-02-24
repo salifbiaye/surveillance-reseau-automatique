@@ -256,7 +256,7 @@ Pass: pfsense (ou votre mot de passe)
 
 **Page de login pfSense :**
 
-![pfSense — page de login](../../images/pfsense-login.png)
+![pfSense — page de login](../../../images/pfsense-login.png)
 
 **Vérifications avant de commencer :**
 - [ ] pfSense accessible via l'interface web
@@ -302,17 +302,17 @@ set switch1 mirror-source=ether2,ether3,ether4 mirror-target=ether5
 
 ### Dashboard pfSense — Interfaces UP
 
-![pfSense — Dashboard principal (interfaces UP)](../../images/pfsense-dashboard.png)
+![pfSense — Dashboard principal (interfaces UP)](../../../images/pfsense-dashboard.png)
 
 ### Règles Firewall LAN
 
-![pfSense — Règles firewall LAN](../../images/pfsense-firewall-rules.png)
+![pfSense — Règles firewall LAN](../../../images/pfsense-firewall-rules.png)
 
 ### Table ARP
 
 **Diagnostics → ARP Table :**
 
-![pfSense — Table ARP](../../images/pfsense-arp-table.png)
+![pfSense — Table ARP](../../../images/pfsense-arp-table.png)
 
 ### Test de connectivité
 
@@ -490,13 +490,13 @@ surveillance-kibana-init          Exited (0)   ← Normal après init
 
 ### Containers dans Portainer
 
-![Portainer — liste des containers](../../images/portainer-containers.png)
+![Portainer — liste des containers](../../../images/portainer-containers.png)
 
 **Dans Portainer : Containers → vérifier que 7+ containers sont `Running`**
 
 ### Logs d'un container (Suricata)
 
-![Portainer — logs Suricata](../../images/portainer-container-logs.png)
+![Portainer — logs Suricata](../../../images/portainer-container-logs.png)
 
 **Logs normaux de Suricata :**
 ```
@@ -628,7 +628,7 @@ curl -s http://192.168.1.100/enseigne.html
 
 > ✅ **SUCCÈS :** La page enseigne doit afficher l'avertissement de surveillance réseau.
 
-![Enseigne légale](../../images/enseigne-legale.png)
+![Enseigne légale](../../../images/enseigne-legale.png)
 
 ---
 
@@ -674,7 +674,7 @@ ip addr show
 
 **Configuration IP du client :**
 
-![Client — ip addr show](../../images/client-ip-config.png)
+![Client — ip addr show](../../../images/client-ip-config.png)
 
 **Si pas d'IP configurée :**
 ```bash
@@ -693,7 +693,7 @@ ping -c 5 8.8.8.8        # Internet
 
 **Ping vers pfSense réussi :**
 
-![Client — ping vers pfSense OK](../../images/client-ping-pfsense.png)
+![Client — ping vers pfSense OK](../../../images/client-ping-pfsense.png)
 
 > ✅ **SUCCÈS :** Si les 3 pings fonctionnent, la configuration réseau est correcte.
 
@@ -701,7 +701,7 @@ ping -c 5 8.8.8.8        # Internet
 
 Depuis le navigateur du client, ouvrir : `http://192.168.1.100/enseigne.html`
 
-![Client — ouverture enseigne NSOC](../../images/client-voir-enseigne.png)
+![Client — ouverture enseigne NSOC](../../../images/client-voir-enseigne.png)
 
 ---
 
@@ -738,7 +738,7 @@ curl http://testmyids.com
 
 ### Capture d'écran génération de trafic
 
-![Client — génération de trafic (curl/nslookup)](../../images/client-traffic-gen.png)
+![Client — génération de trafic (curl/nslookup)](../../../images/client-traffic-gen.png)
 
 ---
 
@@ -754,7 +754,7 @@ src_ip: "192.168.1.50"
 
 **Kibana — Events Suricata filtrés sur le client :**
 
-![Kibana — Events Suricata src_ip 192.168.1.50](../../images/kibana-suricata-client.png)
+![Kibana — Events Suricata src_ip 192.168.1.50](../../../images/kibana-suricata-client.png)
 
 ### Analyses complémentaires par index
 
@@ -1016,16 +1016,16 @@ curl -u admin:admin http://localhost:8005/api/stats | jq '.'
 
 ## 23. Liens Vidéo
 
-> ⚠️ **ATTENTION :** Remplacer les `[LIEN_VIDEO_X]` par les URLs Google Drive / YouTube après upload. Consulter `SCREENSHOTS-CHECKLIST.md` pour les instructions d'enregistrement.
+> 💡 **INFO :** Les liens Google Drive ci-dessus sont actifs. Consulter `SCREENSHOTS-CHECKLIST.md` pour les instructions d'enregistrement.
 
 | # | Vidéo | Description | Lien |
 |---|-------|-------------|------|
-| **V1** | Démarrage `docker compose up -d` | Stack qui démarre, 12 containers UP | [▶️ Regarder][LIEN_VIDEO_1] |
-| **V2** | Client → pfSense → enseigne NSOC | Client se connecte, voit l'enseigne | [▶️ Regarder][LIEN_VIDEO_2] |
-| **V3** | Kibana — 3 types d'events en temps réel | Navigation dns/tls/alert + filtrage KQL | [▶️ Regarder][LIEN_VIDEO_3] |
-| **V4** | Arkime — analyse PCAP | Sessions, inspection paquet, filtres | [▶️ Regarder][LIEN_VIDEO_4] |
-| **V5** | Alerte Suricata en direct | `curl testmyids.com` → alerte Kibana | [▶️ Regarder][LIEN_VIDEO_5] |
-| **V6** | Dashboard Kibana avec trafic client | Trafic client → logs en temps réel | [▶️ Regarder][LIEN_VIDEO_6] |
+| **V1** | Démarrage `docker compose up -d` | Stack qui démarre, 12 containers UP | [▶️ Regarder](https://drive.google.com/file/d/1C6cFiyPUT6xF9mQsXnIZZO_VtcaFRSdg/view?usp=sharing) |
+| **V2** | Client → pfSense → enseigne NSOC | Client se connecte, voit l'enseigne | [▶️ Regarder](https://drive.google.com/file/d/1BFD2yxSL5Ewzo3hR0VlxVSrHhWvuiEWZ/view?usp=sharing) |
+| **V3** | Kibana — 3 types d'events en temps réel | Navigation dns/tls/alert + filtrage KQL | [▶️ Regarder](https://drive.google.com/file/d/1edsoMSsD29oPZrCvWZfDR1OvNWIsvQlF/view?usp=drive_link) |
+| **V4** | Arkime — analyse PCAP | Sessions, inspection paquet, filtres | [▶️ Regarder](https://drive.google.com/file/d/13lY-yqm7IhCPP3bwPHHnZUO79UXNN-o3/view?usp=drive_link) |
+| **V5** | Alerte Suricata en direct | `curl testmyids.com` → alerte Kibana | [▶️ Regarder](https://drive.google.com/file/d/1nV1J8AEcqiTDTcOEsJcAxU81DvwLGSYR/view?usp=drive_link) |
+| **V6** | Dashboard Kibana avec trafic client | Trafic client → logs en temps réel | [▶️ Regarder](https://drive.google.com/file/d/16mRnaiE0Jc_1Nl07DOWXne9ULi6ymKjW/view?usp=drive_link) |
 
 > 💡 **INFO :** Recommandation — Regardez V1 (démarrage) puis V5 (alerte en direct) pour comprendre le pipeline complet.
 

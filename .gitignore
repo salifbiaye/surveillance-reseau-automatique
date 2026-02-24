@@ -1,0 +1,3 @@
+# Suricata generated rules
+surveillance-reseau/configs/suricata/rules/suricata.rules
+surveillance-reseau/configs/suricata/rules/*.rules

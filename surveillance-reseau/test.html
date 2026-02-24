@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Portail Captif - Acces Reseau Invite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0b0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #151c2c;
+            --bg-card-hover: #1a2236;
+            --border-subtle: #1e293b;
+            --border-active: #22d3ee;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-cyan: #22d3ee;
+            --accent-cyan-dim: rgba(34, 211, 238, 0.12);
+            --accent-green: #34d399;
+            --accent-green-dim: rgba(52, 211, 153, 0.12);
+            --accent-red: #f87171;
+            --accent-red-dim: rgba(248, 113, 113, 0.12);
+            --accent-amber: #fbbf24;
+            --accent-amber-dim: rgba(251, 191, 36, 0.12);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 64px 64px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Subtle radial glow behind card */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ============ LOGO / BRANDING ============ */
+        .brand {
+            text-align: center;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .brand-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: var(--accent-cyan-dim);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            margin-bottom: 16px;
+        }
+
+        .brand-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--accent-cyan);
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .brand h1 span {
+            color: var(--accent-cyan);
+        }
+
+        .brand p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* ============ LOGIN CARD ============ */
+        .login-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .login-card-top {
+            padding: 24px 28px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+        }
+
+        .login-card-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green), var(--accent-cyan));
+            background-size: 200% 100%;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        .login-card-top-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .login-card-top h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .login-card-top p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .lock-icon {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--accent-cyan-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-icon svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent-cyan);
+            opacity: 0.6;
+        }
+
+        /* Form */
+        .login-card-body {
+            padding: 24px 28px 28px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .form-input {
+            display: block;
+            width: 100%;
+            height: 48px;
+            padding: 0 16px 0 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px var(--accent-cyan-dim);
+        }
+
+        .form-input:focus + svg,
+        .form-input:focus ~ svg {
+            color: var(--accent-cyan);
+        }
+
+        /* Reverse sibling trick: icon is after input in DOM */
+        .input-wrapper .form-input:focus ~ .input-icon {
+            color: var(--accent-cyan);
+        }
+
+        .error-msg {
+            display: none;
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: var(--accent-red-dim);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            color: var(--accent-red);
+        }
+
+        .error-msg.visible {
+            display: block;
+        }
+
+        .btn-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 48px;
+            margin-top: 8px;
+            background: var(--accent-cyan);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--bg-primary);
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 20px var(--accent-cyan-dim);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ============ STATUS BADGE ============ */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse-dot 2s ease infinite;
+        }
+
+        .status-badge span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .status-badge span strong {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* ============ TERMS ============ */
+        .terms-section {
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        .terms-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .terms-toggle:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--text-muted);
+        }
+
+        .terms-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .terms-toggle.open svg {
+            transform: rotate(180deg);
+        }
+
+        .terms-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .terms-content.open {
+            max-height: 500px;
+        }
+
+        .terms-text {
+            margin-top: 12px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            font-size: 0.75rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .terms-text strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .terms-text ul {
+            list-style: none;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        .terms-text ul li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 6px;
+        }
+
+        .terms-text ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            opacity: 0.6;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            text-align: center;
+            animation: fadeInUp 0.6s ease 0.4s both;
+        }
+
+        .footer p {
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 520px) {
+            .wrapper {
+                padding: 24px 16px;
+                gap: 20px;
+            }
+
+            .login-card-top, .login-card-body {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .brand h1 {
+                font-size: 1.25rem;
+            }
+
+            .brand-icon {
+                width: 56px;
+                height: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+
+        <!-- Branding -->
+        <div class="brand">
+            <div class="brand-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+            </div>
+            <h1>Portail <span>Captif</span></h1>
+            <p>Acces securise au reseau invite</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <div class="login-card-top">
+                <div class="login-card-top-row">
+                    <div>
+                        <h2>Authentification</h2>
+                        <p>Saisissez vos identifiants pour vous connecter au reseau invite.</p>
+                    </div>
+                    <div class="lock-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="login-card-body">
+                <form method="post" action="$PORTAL_ACTION$">
+                    <input name="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
+                    <input name="zone" type="hidden" value="$PORTAL_ZONE$">
+
+                    <div class="form-group">
+                        <label for="auth_user">Nom d'utilisateur</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                            <input
+                                type="text"
+                                class="form-input"
+                                name="auth_user"
+                                id="auth_user"
+                                placeholder="Entrez votre identifiant..."
+                                autocomplete="username"
+                                autofocus
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auth_pass">Mot de passe</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                            <input
+                                type="password"
+                                class="form-input"
+                                name="auth_pass"
+                                id="auth_pass"
+                                placeholder="Entrez votre mot de passe..."
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div id="error-message" class="error-msg">
+                        $PORTAL_MESSAGE$
+                    </div>
+
+                    <button name="accept" type="submit" class="btn-submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                        </svg>
+                        Se connecter
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>Portail captif <strong>en ligne</strong> &mdash; Reseau securise</span>
+        </div>
+
+        <!-- Terms of Use -->
+        <div class="terms-section">
+            <button class="terms-toggle" onclick="toggleTerms()" id="terms-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+                Conditions d'utilisation
+            </button>
+            <div class="terms-content" id="terms-content">
+                <div class="terms-text">
+                    <p>En utilisant ce reseau invite, vous acceptez les conditions suivantes :</p>
+                    <ul>
+                        <li>L'utilisation des informations ou ressources accessibles via ce portail se fait a vos propres risques.</li>
+                        <li>Toute tentative d'acces a des appareils ou ressources sans droits legitimes est <strong>strictement interdite</strong>.</li>
+                        <li>La reproduction ou transmission de fichiers proteges par le droit d'auteur est interdite sauf autorisation du detenteur.</li>
+                        <li>Les attaques reseau (scans de ports, DoS/DDoS, floods, injections, hijacking) sont <strong>interdites</strong>.</li>
+                        <li>La transmission de logiciels malveillants (virus, trojans, vers) est interdite.</li>
+                        <li>L'installation furtive de logiciels ou la modification de configurations est interdite.</li>
+                        <li>Vous vous engagez a utiliser cet acces de maniere responsable, en respectant la securite et la vie privee des autres utilisateurs.</li>
+                        <li>Nous nous reservons le droit de surveiller le trafic pour assurer le respect de ces conditions.</li>
+                        <li>Toute utilisation non autorisee peut donner lieu a des <strong>poursuites judiciaires</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Laboratoire de Cybersecurite &bull; NSOC</p>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleTerms() {
+            const btn = document.getElementById('terms-btn');
+            const content = document.getElementById('terms-content');
+            btn.classList.toggle('open');
+            content.classList.toggle('open');
+        }
+
+        // Show error if URL contains error param
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('error')) {
+            document.getElementById('error-message').classList.add('visible');
+        }
+    </script>
+
+</body>
+</html>

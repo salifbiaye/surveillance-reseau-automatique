@@ -1,0 +1,372 @@
+[33mcommit 742cfd750dbc2987b5ba637bbda4c4ccc91e6d1a[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Salifbiaye <salifbiaye411@gmail.com>
+Date:   Tue Feb 24 15:27:08 2026 +0000
+
+    updates
+
+[33mcommit 854e224e24223c3a65249895de91d76f05428c33[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:25:53 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit df548246fbb394b5b8e520d172316ac86bba8aff[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:23:59 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit 1f910876f4bc671fc2c95d1781959c92e07d5918[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:20:14 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit 7ee6583355c1fb7cb9e475018fb05b2380dffea4[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:15:56 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit ff2dc44f629cc77df761cdee76e287b6a3ea56c9[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:11:18 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit 069dfa09c1e62457feded181b3afec92cce26e15[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:08:38 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit 3a6ec6f0aa3d06dc83ba1f469795a7f169468fa7[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 22:07:54 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit ddf8db63f508df59108ca785210c71009e16216e[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:57:14 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit 40a2d08afd6ed422e47d53c3171878b0aabf8785[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:43:12 2026 +0000
+
+    docs(surveillance-reseau): Add NSOC-friendly network architecture diagram
+    
+    - Add detailed SVG architecture diagram showing network surveillance system layout
+    - Illustrate three-phase architecture: collection (Suricata, tcpdump, ARPWatch), processing (Filebeat, Logstash), and visualization (Elasticsearch, Kibana, Arkime)
+    - Include network interface binding (ens33), data flow paths, and component interactions
+    - Provide visual reference for NSOC team to understand system topology and data pipeline
+    - Enhance documentation with professional styling and color-coded phase sections
+
+[33mcommit b103cb260ad650effe29803c5996acf96506bccd[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:38:46 2026 +0000
+
+    feat(arkime): Allow all IPs for user authentication
+    
+    - Update userAuthIps configuration to accept all IP addresses (0.0.0.0/0)
+    - Remove IP restriction to enable authentication from any source
+    - Align with deployment requirements for unrestricted access
+
+[33mcommit 7998d132025ae65d9b9ff720f3b69035365fdc05[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:34:43 2026 +0000
+
+    feat(arkime): Update network interface binding to localhost
+    
+    - Change network interface from eth0 to lo for local-only access
+    - Restrict Arkime to listen on localhost instead of external interface
+    - Improves security by preventing external network exposure
+
+[33mcommit b26c4695d221c6179d335157cf67dec6fa501429[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:21:45 2026 +0000
+
+    feat(arkime): Update Elasticsearch connection to use localhost
+    
+    - Change Elasticsearch host from 'elasticsearch' to 'localhost' in custom configuration
+    - Enables local development and testing scenarios with direct host access
+    - Maintains existing credentials and other configuration parameters
+
+[33mcommit b5aa54d691df164f0782b79121e664efe498578b[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:19:57 2026 +0000
+
+    feat(surveillance-reseau): Mount custom Arkime configuration file
+    
+    - Add volume mount for custom Arkime configuration at ./configs/arkime/config-custom.ini
+    - Map custom config to /opt/arkime/etc/config.ini inside container with read-only access
+    - Enables centralized configuration management for Arkime service customization
+
+[33mcommit c0ee071351feeaf9a62c1a103a68e9d9afac41e1[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:19:07 2026 +0000
+
+    feat(arkime): Disable auto-initialization and customize startup configuration
+    
+    - Disable ARKIME_AUTOINIT and ARKIME_CREATEADMINUSER in docker-compose.yml
+    - Update Elasticsearch credentials to use hardcoded default password in config-custom.ini
+    - Add start-arkime.sh wrapper script to modify userAuthIps configuration at runtime
+    - Implement dynamic configuration modification to authorize all IPs for user authentication
+    - Shift from automatic initialization to manual startup control for better deployment flexibility
+
+[33mcommit 05f8610f5a3b273cb5e61df6d971a8601e579782[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:16:10 2026 +0000
+
+    feat(arkime): Enable auto-initialization and admin user creation
+    
+    - Enable ARKIME_AUTOINIT to automatically initialize Arkime on startup
+    - Enable ARKIME_CREATEADMINUSER to automatically create admin user
+    - Remove custom config file mount to use default Arkime configuration
+    - Simplify Arkime initialization process by relying on environment variables
+
+[33mcommit 581c9a0ab8dbd8111e849165bb484a989efe0f5f[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:15:38 2026 +0000
+
+    feat(arkime): Externalize Elasticsearch credentials and disable auto-initialization
+    
+    - Replace hardcoded Elasticsearch password with environment variable reference
+    - Disable Arkime auto-initialization to prevent automatic database setup
+    - Disable automatic admin user creation for manual control over user provisioning
+    - Improve security by externalizing sensitive credentials from configuration files
+
+[33mcommit dfe67ef5cc318a782cc5f0db451e47720a379edc[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:12:43 2026 +0000
+
+    feat(arkime): Add custom configuration and expand authentication IP whitelist
+    
+    - Add custom Arkime configuration file with comprehensive settings for packet capture, storage, and processing
+    - Configure Elasticsearch authentication credentials in Arkime config
+    - Set userAuthIps to empty string to allow all IPs (0.0.0.0/0)
+    - Mount custom config file into Arkime container via docker-compose
+    - Add ARKIME_USERAUTHIPS environment variable for IP whitelist configuration
+    - Consolidate Arkime settings into dedicated config file for better maintainability
+
+[33mcommit e706facca9ddfecc4c27d96951f2b23b44b512bc[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:06:22 2026 +0000
+
+    feat(surveillance-reseau): Enable Arkime proxy trust configuration
+    
+    - Add ARKIME_TRUSTPROXY=true environment variable to Arkime service
+    - Enable proper X-Forwarded-* header handling for reverse proxy scenarios
+    - Ensure correct client IP and protocol detection behind NGINX proxy
+
+[33mcommit 2fa3abc5c1676b473620f55a61e46f2bab5ebf5d[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:03:48 2026 +0000
+
+    feat(surveillance-reseau): Adjust Arkime network binding and authentication configuration
+    
+    - Change ARKIME_VIEWHOST from 127.0.0.1 to 0.0.0.0 to allow external network access
+    - Remove ARKIME_USERAUTHIPS whitelist restriction for simplified network access control
+    - Enables Arkime viewer to be accessible from all network interfaces while relying on NGINX proxy for security
+
+[33mcommit ad9b8359a9bc7912ac7c38a7a113cd14e835dd52[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:02:10 2026 +0000
+
+    feat(surveillance-reseau): Configure Arkime user authentication IP whitelist
+    
+    - Add ARKIME_USERAUTHIPS environment variable to docker-compose.yml
+    - Whitelist loopback addresses (127.0.0.1, ::1) for local authentication
+    - Whitelist private network ranges (172.16.0.0/12, 10.0.0.0/8, 192.168.0.0/16)
+    - Restrict user authentication to trusted internal networks for enhanced security
+
+[33mcommit c81a1aa7fea01227920a6a0996fcad74e6f8da6e[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 21:01:08 2026 +0000
+
+    feat(arkime): Configure user authentication IP whitelist for secure access
+    
+    - Add IP whitelist to userAuthIps configuration including localhost (127.0.0.1, ::1)
+    - Include private network ranges (172.16.0.0/12, 10.0.0.0/8, 192.168.0.0/16)
+    - Restrict user authentication to trusted internal networks only
+    - Enhance security by limiting authentication attempts to whitelisted IP addresses
+
+[33mcommit fe1a0f0f1a73f6205e54440172e7619d92ff39dd[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:58:40 2026 +0000
+
+    feat(surveillance-reseau): Add Basic authentication to Elasticsearch API calls
+    
+    - Add Base64-encoded credentials for Elasticsearch authentication
+    - Include Authorization header in _cat/count API request for document count
+    - Include Authorization header in _count API request for alert statistics
+    - Include Authorization header in _cat/indices API request for indices count
+    - Include Authorization header in _search API request for recent events
+    - Secure all Elasticsearch proxy requests through NGINX with proper credentials
+
+[33mcommit 6f177f9dab07e803d13c27b1de9c9fe6b8cbf0b2[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:56:35 2026 +0000
+
+    feat(surveillance-reseau): Remove Arkime status proxy and dedicated port configuration
+    
+    - Remove /arkime-status/ location block that proxied Arkime status endpoint
+    - Remove CORS headers configuration from Arkime status proxy
+    - Remove dedicated server block listening on port 8005 for Arkime
+    - Remove basic authentication configuration for Arkime port access
+    - Consolidate Arkime access through main proxy configuration
+    - Simplify NGINX configuration by eliminating redundant proxy rules
+
+[33mcommit 64b87ce35657ff8206a5ac2c431dcd4ca773b7de[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:54:29 2026 +0000
+
+    feat(surveillance-reseau): Implement real-time service monitoring and Elasticsearch stats
+    
+    - Replace placeholder service status checks with actual Docker API integration
+    - Add updateServiceStatus function to dynamically update container status indicators
+    - Implement real Elasticsearch statistics fetching (packet count, alerts, indices)
+    - Add system uptime monitoring via dedicated API endpoint
+    - Configure auto-refresh intervals for service status (15s), Elasticsearch stats (30s), and uptime (60s)
+    - Enable proper error handling with fallback values when APIs are unavailable
+    - Format numeric output with French locale for consistency
+
+[33mcommit a635148c97fbfdb875bf8d6725a7772dc9d546db[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:49:32 2026 +0000
+
+    feat(surveillance-reseau): Add Elasticsearch proxy through NGINX to resolve CORS issues
+    
+    - Add `/elasticsearch/` proxy location in NGINX configuration to forward requests to Elasticsearch backend
+    - Configure proxy headers including Host, X-Real-IP, and X-Forwarded-For for proper request forwarding
+    - Implement CORS headers (Allow-Origin, Allow-Methods, Allow-Headers, Allow-Credentials) to enable cross-origin requests
+    - Handle HTTP OPTIONS preflight requests with 204 response
+    - Update Suricata activity fetch endpoint from direct `http://localhost:9200` to proxied `/elasticsearch/` path
+    - Eliminates CORS restrictions by routing Elasticsearch requests through NGINX instead of direct browser access
+
+[33mcommit cb576ebd69c798b51913f455fe6c03445e7660d7[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:47:53 2026 +0000
+
+    docs(surveillance-reseau): Add final platform summary and simplify status checks
+    
+    - Add RESUME-FINAL.md with comprehensive platform overview and known limitations
+    - Document all deployed services, security features, and access points
+    - Include useful commands for deployment, verification, and troubleshooting
+    - Simplify NGINX index.html by removing non-functional CORS-blocked status checks
+    - Replace complex JavaScript status verification with static display and CLI guidance
+    - Update documentation to reflect current platform capabilities and limitations
+
+[33mcommit de92b292a2e503f36ced3e0ebec554881a05639c[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:44:24 2026 +0000
+
+    feat(surveillance-reseau): Enhance Arkime security with authentication and network isolation
+    
+    - Remove localhost-only restriction from NGINX root location for broader access
+    - Add HTTP basic authentication to Arkime proxy with .htpasswd file
+    - Configure Arkime to use host network mode for improved network isolation
+    - Update Arkime Elasticsearch connection to use localhost instead of container DNS
+    - Change Arkime network interface from eth0 to lo (loopback) for local-only binding
+    - Set Arkime view host to 127.0.0.1 instead of 0.0.0.0 for restricted access
+    - Add X-Forwarded-Host header to proxy configuration for proper host forwarding
+    - Remove explicit network and dependency declarations from Arkime service
+    - Improve security posture by restricting Arkime to localhost access with authentication layer
+
+[33mcommit c94515ec0e019a33834e79ffbe5bc616f3789d52[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:41:17 2026 +0000
+
+    update docker compose fix bug
+
+[33mcommit ad250b87d31b39e64a33aae13a66810ea41444eb[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:38:25 2026 +0000
+
+    feat(surveillance-reseau): Configure Arkime proxy through NGINX and secure port exposure
+    
+    - Add NGINX server block on port 8005 to proxy Arkime web interface
+    - Configure proxy headers for WebSocket upgrade support and IP forwarding
+    - Remove direct port exposure from Arkime container, route through NGINX proxy
+    - Update docker-compose port mappings to expose Arkime only via NGINX on 127.0.0.1:8005
+    - Refactor status API container entrypoint for improved clarity
+    - Remove inline comments from port configurations for cleaner YAML structure
+
+[33mcommit d5b88deb0d2b5961d568f35a579045857407bf56[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:34:36 2026 +0000
+
+    feat(surveillance-reseau): Expose Arkime web interface and add username header config
+    
+    - Add ARKIME_USERNAMEHEADER environment variable for authentication header support
+    - Change Arkime port binding from localhost-only (127.0.0.1:8005) to all interfaces (8005:8005)
+    - Enable network accessibility for Arkime web interface across surveillance network
+    - Add clarifying comment on port exposure for network access
+
+[33mcommit 55de7d3ad8c23b3a9a597b69b451afe72b8ef501[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:29:08 2026 +0000
+
+    feat(surveillance-reseau): Enhance security with access restrictions and Arkime updates
+    
+    - Add SECURISER-ACCES.md documentation for Elasticsearch password configuration
+    - Restrict Elasticsearch (9200) and Kibana (5601) ports to localhost only
+    - Restrict Arkime (8005) and status API (8888) ports to localhost only
+    - Update Arkime image to pinned version v5.0.1 with improved environment configuration
+    - Simplify Arkime initialization by removing custom entrypoint script
+    - Update nginx configuration to restrict NSOC homepage to localhost while keeping legal notice publicly accessible
+    - Modify enseigne.html to remove acceptance buttons and display automatic acceptance notice
+    - Add docker-cli installation to status API container for Docker socket access
+    - Improve port binding security by limiting external service exposure to internal network only
+
+[33mcommit 6d772fdb2bf90dfef1a5f1d6fc66d412b4e38a78[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:11:44 2026 +0000
+
+    chore(surveillance-reseau): Update Arkime Docker image source
+    
+    - Change Arkime image from official arkime/arkime:latest to mosajjal/arkime:latest
+    - Ensures compatibility with network surveillance stack configuration
+    - Maintains consistent image sourcing across deployment
+
+[33mcommit 0048e072ff34e751947803ab33763404980e9979[m
+Author: Salifbiaye <salifbiaye411@gmail.com>
+Date:   Tue Feb 17 20:04:13 2026 +0000
+
+    Resolve stash conflicts after rebase
+
+[33mcommit 2534688963b4c007eeb7f8f9c2fd8b53a6767e32[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Tue Feb 17 20:01:01 2026 +0000
+
+    feat(surveillance-reseau): Add security authentication and status API
+    
+    - Add SECURITY-SETUP.md with comprehensive authentication configuration guide
+    - Add security setup script for automated credential management
+    - Add Arkime configuration file with security settings
+    - Add status.py API endpoint for real-time Docker container and system monitoring
+    - Add init-arkime.sh script for Arkime initialization
+    - Update .env.example with optional authentication credentials (Elasticsearch, Kibana, Arkime)
+    - Update docker-compose.yml to enable xpack security and authentication
+    - Update filebeat.yml with Elasticsearch authentication credentials
+    - Update nginx HTML pages (index.html, enseigne.html) with security notices
+    - Enable authentication by default across all services for production readiness
+
+[33mcommit 610c744902c83912442b0d73cf23d16c49ec9eb3[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Sun Feb 15 21:15:37 2026 +0000
+
+    docs(installation-privee): Remove outdated image references
+    
+    - Remove Kibana interface image reference from section 7.6.1
+    - Remove NSOC homepage interface image reference from services summary
+    - Clean up unnecessary blank lines after image removals
+    - Images were no longer relevant to current documentation structure
+
+[33mcommit 298b2fb79e8b8475de3a8f4ff20313b998f62544[m
+Author: Salif Biaye <salifbiaye@esp.sn>
+Date:   Sun Feb 15 21:08:32 2026 +0000
+
+    clean initial commit

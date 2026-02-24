@@ -6,7 +6,7 @@
 ---
 
 ### Département de Génie Informatique
-**Diplôme d'Ingénieur de Conception - DIC-3-GLSI**
+**Diplôme d'Ingénieur de Conception — DIC-3-GLSI**
 
 ---
 
@@ -17,23 +17,25 @@
 
 ---
 
-![Docker](https://img.shields.io/badge/Docker-Required-blue)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange)
-![Status](https://img.shields.io/badge/Status-Confidentiel-red)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-E95420?logo=ubuntu&logoColor=white)
+![pfSense](https://img.shields.io/badge/Firewall-pfSense-003366)
+![Arkime](https://img.shields.io/badge/PCAP-Arkime_v5-FF6600)
+![Status](https://img.shields.io/badge/Document-Confidentiel-red)
 
 ---
 
 ### 👥 Groupe de Projet
 
-**Membres:**
+**Membres :**
 - **Salif Biaye**
 - **Ndeye Astou Diagouraga**
 
 ---
 
-**Année Académique:** 2025-2026
-**Date:** Février 2026
-**Version:** 2.1 - Simplifié
+**Année Académique :** 2025-2026
+**Date :** Février 2026
+**Version :** 3.0 — Stack 12 services + Arkime v5
 
 ---
 
@@ -43,18 +45,16 @@
 
 ---
 
-# Guide d'Installation Privé - Laboratoire de Surveillance Réseau
+# Guide d'Installation Privé — Laboratoire de Surveillance Réseau
 
 <div align="center">
 
-**🔒 Document Confidentiel - Usage Interne**
+**🔒 Document Confidentiel — Usage Interne**
 
-📍 **Institution:** École Supérieure Polytechnique (ESP) - UCAD
-🎓 **Formation:** Département Génie Informatique - DIC-3-GLSI
-👥 **Groupe:** Salif Biaye & Ndeye Astou Diagouraga
-📅 **Date:** Février 2026 | **Version:** 2.1
-
-**📋 Projet IntroSSI - Guide d'installation simplifié pour architecture 3 machines**
+📍 **Institution :** École Supérieure Polytechnique (ESP) — UCAD
+🎓 **Formation :** Département Génie Informatique — DIC-3-GLSI
+👥 **Groupe :** Salif Biaye & Ndeye Astou Diagouraga
+📅 **Date :** Février 2026 | **Version :** 3.0
 
 </div>
 
@@ -67,37 +67,44 @@
 2. [Schéma Réseau et Adresses IP](#2-schéma-réseau)
 3. [Prérequis Globaux](#3-prérequis-globaux)
 
-### 🛡️ PARTIE 1: Machine pfSense (Routeur/Firewall)
+### 🛡️ PARTIE 1 : Machine pfSense (Routeur/Firewall)
 4. [Prérequis pfSense](#41-prérequis-pfsense)
 5. [Configuration Port Mirroring (SPAN)](#42-configuration-port-mirroring)
 6. [Vérification pfSense](#43-vérification-pfsense)
 
-### 🐳 PARTIE 2: Machine Ubuntu (Serveur NSOC)
+### 🐳 PARTIE 2 : Machine Ubuntu (Serveur NSOC)
 7. [Prérequis Ubuntu](#71-prérequis-ubuntu)
 8. [Clone du Projet](#72-clone-du-projet)
-9. [Configuration de l'Interface (ens33)](#73-configuration-de-linterface)
-10. [Lancement Docker Compose](#74-lancement-docker-compose)
+9. [Configuration de l'Interface](#73-configuration-de-linterface)
+10. [Lancement Docker Compose (12 services)](#74-lancement-docker-compose)
 11. [Vérification via Portainer](#75-vérification-via-portainer)
 12. [Vérification via Kibana](#76-vérification-via-kibana)
+13. [Vérification Arkime v5](#77-vérification-arkime)
+14. [Vérification Enseigne Légale](#78-vérification-enseigne)
+15. [Vérification Status API](#79-vérification-status-api)
 
-### 💻 PARTIE 3: Machine Cliente Linux
-13. [Configuration Réseau](#131-configuration-réseau)
-14. [Génération de Trafic](#132-génération-de-trafic)
-15. [Vérification dans Kibana](#133-vérification-dans-kibana)
+### 💻 PARTIE 3 : Machine Cliente Linux
+16. [Configuration Réseau](#161-configuration-réseau)
+17. [Génération de Trafic](#162-génération-de-trafic)
+18. [Vérification dans Kibana](#163-vérification-dans-kibana)
 
-### 🔍 PARTIE 4: Validation et Maintenance
-16. [Tests de Bout en Bout](#16-tests-de-bout-en-bout)
-17. [Dépannage par Machine](#17-dépannage-par-machine)
-18. [Commandes de Référence](#18-commandes-de-référence)
+### 🔍 PARTIE 4 : Validation et Maintenance
+19. [Checklist de Validation Complète](#19-checklist-de-validation)
+20. [Tests de Bout en Bout](#20-tests-de-bout-en-bout)
+21. [Dépannage par Machine](#21-dépannage)
+22. [Commandes de Référence](#22-commandes-de-référence)
+
+### 🎬 PARTIE 5 : Démonstrations Vidéo
+23. [Liens Vidéo](#23-vidéos)
 
 ### 🎯 Conclusion
-19. [Conclusion et Prochaines Étapes](#19-conclusion)
+24. [Conclusion et Prochaines Étapes](#24-conclusion)
 
 ---
 
 ## 🏗️ 1. Architecture du Laboratoire
 
-Ce laboratoire de surveillance réseau utilise une architecture à **3 machines virtuelles** interconnectées pour permettre la capture, l'analyse et la visualisation du trafic réseau en temps réel.
+Ce laboratoire de surveillance réseau utilise une architecture à **3 machines virtuelles** interconnectées.
 
 ### 1.1 Schéma d'Architecture
 
@@ -107,60 +114,59 @@ graph TB
         WAN[Connexion WAN]
     end
 
-    subgraph pfSense["🛡️ Machine 1: pfSense<br/>IP: 192.168.1.1"]
-        PF[pfSense Firewall/Router<br/>Port Mirroring activé]
+    subgraph pfSense["🛡️ Machine 1: pfSense — 192.168.1.1"]
+        PF[pfSense Firewall/Router<br/>Port Mirroring SPAN activé]
     end
 
-    subgraph Ubuntu["🐳 Machine 2: Ubuntu NSOC<br/>IP: 192.168.1.100"]
-        Docker[Docker Compose<br/>6 Conteneurs]
-        Suricata[Suricata IDS]
-        Kibana[Kibana<br/>:5601]
-        Portainer[Portainer<br/>:9000]
+    subgraph Ubuntu["🐳 Machine 2: Ubuntu NSOC — 192.168.1.100"]
+        Docker[Docker Compose<br/>12 Services]
+        Suricata[Suricata IDS 7.0]
+        Arkime[Arkime v5 :8005]
+        Kibana[Kibana :5601]
+        Portainer[Portainer :9000]
+        StatusAPI[Status API :8888]
+        Nginx[Nginx :80 + enseigne]
     end
 
-    subgraph Client["💻 Machine 3: Client Linux<br/>IP: 192.168.1.50"]
+    subgraph Client["💻 Machine 3: Client Linux — 192.168.1.50"]
         Browser[Navigateur Web]
-        Terminal[Terminal/Ping/DNS]
+        Terminal[Terminal/curl/nslookup]
     end
 
     WAN -->|WAN| PF
     PF -->|LAN| Client
-    PF -->|Port Mirroring<br/>SPAN| Ubuntu
+    PF -->|Port Mirroring SPAN| Ubuntu
     Client -->|Trafic réseau| PF
-    Ubuntu -->|Capture trafic| Suricata
-    Suricata -->|Logs| Kibana
 
     style pfSense fill:#ffebee
     style Ubuntu fill:#e8f5e9
     style Client fill:#e3f2fd
 ```
 
-![Architecture complète du laboratoire](../../images/library.png)
-
 ### 1.2 Rôle de Chaque Machine
 
-| Machine | Rôle | Services | Interface |
-|---------|------|----------|-----------|
-| **🛡️ pfSense** | Routeur/Firewall | Port mirroring, Routage, NAT | WAN: ens160<br/>LAN: ens192 |
-| **🐳 Ubuntu NSOC** | Serveur de surveillance | Docker, Suricata, Kibana, Elasticsearch | ens33 (capture) |
-| **💻 Client Linux** | Génération de trafic | Navigateur, outils réseau | ens33 |
+| Machine | Rôle | Services Clés | IP |
+|---------|------|--------------|-----|
+| **🛡️ pfSense** | Routeur/Firewall | Port mirroring, NAT, Firewall | 192.168.1.1 |
+| **🐳 Ubuntu NSOC** | Serveur de surveillance | 12 containers Docker | 192.168.1.100 |
+| **💻 Client Linux** | Génération de trafic | Navigateur, outils réseau | 192.168.1.50 |
 
 ### 1.3 Flux de Fonctionnement
 
 ```
-📍 Étape 1: La machine Cliente génère du trafic réseau (navigation, ping, DNS)
+📍 Étape 1: La machine Cliente génère du trafic réseau
        ↓
 📍 Étape 2: Le trafic passe par le routeur pfSense
        ↓
 📍 Étape 3: pfSense duplique le trafic via port mirroring (SPAN)
        ↓
-📍 Étape 4: La machine Ubuntu NSOC capture le trafic dupliqué
+📍 Étape 4: Ubuntu NSOC capture le trafic (Suricata + Arkime)
        ↓
-📍 Étape 5: Suricata analyse et enregistre les événements
+📍 Étape 5: Suricata analyse → eve.json → Filebeat → Elasticsearch
        ↓
-📍 Étape 6: Elasticsearch indexe les données
+📍 Étape 6: Arkime indexe les sessions PCAP
        ↓
-📍 Étape 7: Kibana visualise les événements capturés
+📍 Étape 7: Kibana visualise + Arkime permet l'analyse PCAP
 ```
 
 ---
@@ -177,377 +183,252 @@ Réseau LAN: 192.168.1.0/24
 └── 192.168.1.50   → Client Linux (Machine de test)
 ```
 
-![Topologie réseau du laboratoire](../../images/enseigne.png)
+### 2.2 Ports Exposés sur Ubuntu NSOC
 
-### 2.2 Configuration Réseau Détaillée
-
-| Machine | Hostname | Adresse IP | Gateway | Rôle |
-|---------|----------|------------|---------|------|
-| **pfSense** | pfsense.lab | 192.168.1.1/24 | - | Routeur principal |
-| **Ubuntu NSOC** | nsoc-server.lab | 192.168.1.100/24 | 192.168.1.1 | Serveur de surveillance |
-| **Client Linux** | client.lab | 192.168.1.50/24 | 192.168.1.1 | Machine de test |
-
----
-
-## 💻 3. Prérequis Globaux
-
-### 3.1 Matériel
-
-**Configuration minimale (par machine):**
-- **CPU:** 2 cœurs (Intel/AMD)
-- **RAM:** 4 GB
-- **Disque:** 50 GB d'espace libre
-- **Réseau:** 1 interface Gigabit minimum
-
-**Configuration recommandée:**
-- **CPU:** 4+ cœurs
-- **RAM:** 8 GB (surtout pour la machine Ubuntu NSOC)
-- **Disque:** 200 GB SSD
-- **Réseau:** 2 interfaces pour pfSense (WAN + LAN)
-
-### 3.2 Logiciels Requis
-
-**Machine pfSense:**
-- ✅ pfSense 2.7+ déjà installé
-- ✅ Accès interface web configuré
-
-**Machine Ubuntu NSOC:**
-- ✅ Ubuntu Server 22.04 LTS déjà installé
-- ✅ Docker version 20.10+ déjà installé
-- ✅ Docker Compose version 2.0+ déjà installé
-- ✅ Git déjà installé
-- ✅ Accès sudo disponible
-
-**Machine Cliente Linux:**
-- ✅ Distribution Linux (Ubuntu, Debian, Fedora, etc.)
-- ✅ Navigateur web installé
-- ✅ Outils réseau de base (ping, curl, wget)
-
-### 3.3 Vérification Rapide (Machine Ubuntu)
-
-```bash
-# Vérifier Ubuntu
-lsb_release -a  # Doit afficher Ubuntu 22.04 LTS
-
-# Vérifier Docker
-docker --version  # Version 20.10+
-
-# Vérifier Docker Compose
-docker compose version  # Version 2.0+
-
-# Vérifier Git
-git --version
-
-# Vérifier accès sudo
-sudo echo "OK"
-
-# Vérifier interface réseau
-ip link show ens33
-```
-
-**Si tout s'affiche correctement, vous êtes prêt à continuer!**
+| Port | Service | URL |
+|------|---------|-----|
+| **80** | Nginx (Dashboard + Enseigne) | `http://192.168.1.100` |
+| **5601** | Kibana | `http://192.168.1.100:5601` |
+| **8005** | Arkime v5 | `http://192.168.1.100:8005` |
+| **8888** | Status API | `http://192.168.1.100:8888/health` |
+| **9000** | Portainer | `http://192.168.1.100:9000` |
+| **9200** | Elasticsearch API | `http://192.168.1.100:9200` |
 
 ---
 
 <div style="page-break-after: always;"></div>
 
+## 💻 3. Prérequis Globaux
+
+### 3.1 Matériel (par machine)
+
+**Configuration minimale :**
+- CPU : 2 cœurs
+- RAM : 4 GB (8 GB pour Ubuntu NSOC)
+- Disque : 50 GB libre (200 GB SSD recommandé pour NSOC)
+- Réseau : 1 interface Gigabit
+
+### 3.2 Logiciels Requis
+
+**Machine pfSense :**
+- ✅ pfSense 2.7+ installé et accessible
+- ✅ Au moins 2 interfaces (WAN + LAN)
+
+**Machine Ubuntu NSOC :**
+- ✅ Ubuntu Server 22.04 LTS
+- ✅ Docker version 20.10+
+- ✅ Docker Compose version 2.0+
+- ✅ Git installé
+- ✅ Accès sudo disponible
+
+**Machine Cliente Linux :**
+- ✅ Distribution Linux (Ubuntu, Debian, Fedora…)
+- ✅ Navigateur web installé
+- ✅ Outils réseau (ping, curl, nslookup, dig)
+
+### 3.3 Vérification Rapide
+
+```bash
+# Sur Ubuntu NSOC — vérifier l'environnement
+lsb_release -a          # Ubuntu 22.04 LTS
+docker --version        # Docker 20.10+
+docker compose version  # Docker Compose v2.0+
+git --version
+sudo echo "sudo OK"
+ip link show ens33      # Interface réseau UP
+```
+
 ---
 
-# 🛡️ PARTIE 1: Machine pfSense (Routeur/Firewall)
+<div style="page-break-after: always;"></div>
+
+# 🛡️ PARTIE 1 : Machine pfSense (Routeur/Firewall)
 
 ## 4.1 Prérequis pfSense
 
-**Avant de commencer, vérifier que:**
+**Accès interface web pfSense :**
 
-✅ pfSense est installé et accessible
-✅ Vous avez accès à l'interface web pfSense
-✅ Au moins 2 interfaces réseau sont configurées (WAN + LAN)
-✅ Vous connaissez l'IP de l'interface web pfSense (généralement 192.168.1.1)
-
-**Accès interface web:**
 ```
-URL: https://192.168.1.1
-Identifiant par défaut: admin
-Mot de passe: pfsense (ou celui que vous avez configuré)
+URL:  https://192.168.1.1
+User: admin
+Pass: pfsense (ou votre mot de passe)
 ```
 
-![Interface web pfSense](../../images/login pfsense.png)
+**Page de login pfSense :**
+
+![pfSense — page de login](../../images/pfsense-login.png)
+
+**Vérifications avant de commencer :**
+- [ ] pfSense accessible via l'interface web
+- [ ] Au moins 2 interfaces configurées (WAN + LAN)
+- [ ] IP LAN = 192.168.1.1
 
 ---
 
-## 4.2 Configuration Port Mirroring
+## 4.2 Configuration Port Mirroring (SPAN)
 
-Le **port mirroring** (aussi appelé **SPAN** - Switched Port ANalyzer) permet de dupliquer le trafic réseau d'un port vers un autre port où est connecté le serveur de surveillance.
+Le **port mirroring** (SPAN) duplique le trafic réseau vers le serveur de surveillance.
 
-### 4.2.1 Identifier les Ports
-
-Avant de configurer le port mirroring, identifiez:
-
-1. **Port(s) source(s):** Le(s) port(s) dont vous voulez capturer le trafic
-   - Exemple: `ens192` (interface LAN de pfSense)
-
-2. **Port destination:** Le port connecté à la machine Ubuntu NSOC
-   - Exemple: Port physique connecté à la machine Ubuntu
-
-### 4.2.2 Configuration sur Switch Géré
-
-**Sur un switch Cisco:**
+### Sur switch Cisco
 
 ```cisco
 enable
 configure terminal
 
-! Créer une session SPAN
 monitor session 1 source interface Gi0/1
 monitor session 1 destination interface Gi0/24
+! Gi0/1 = interface LAN pfSense
+! Gi0/24 = interface Ubuntu NSOC
 
-! Gi0/1 = interface à surveiller (connexion pfSense LAN)
-! Gi0/24 = interface du serveur Ubuntu NSOC
-
-! Vérifier la configuration
 show monitor session 1
-
-! Sauvegarder
 write memory
 ```
 
-**Sur un switch Mikrotik RouterOS:**
+### Sur switch Mikrotik
 
 ```routeros
-# Via Terminal (SSH/Console)
-
-# Identifier le switch chip
-/interface ethernet switch print
-
-# Configurer le port mirroring
-# ether5 = port du serveur Ubuntu NSOC
-# ether2-ether4 = ports à surveiller (LAN)
 /interface ethernet switch
 set switch1 mirror-source=ether2,ether3,ether4 mirror-target=ether5
+! ether5 = port Ubuntu NSOC
 
-# Vérifier la configuration
 /interface ethernet switch print detail
 ```
 
-**Via WinBox (Interface graphique Mikrotik):**
-
-1. Menu: `System → RouterBoard → Settings`
-2. Onglet: `Switch`
-3. Cocher: `Mirror to port` → Sélectionner `ether5`
-4. `Mirror from`: Sélectionner `ether2, ether3, ether4`
-5. Cliquer: `Apply`
-
-![Configuration port mirroring pfSense](../../images/captiveportal.png)
-
-### 4.2.3 Notes Importantes
-
-**⚠️ Points à retenir:**
-- Le port de destination (mirror target) ne doit **PAS** envoyer de trafic, seulement recevoir
-- La machine Ubuntu NSOC doit être connectée au port de destination
-- Le port mirroring peut impacter les performances du switch si beaucoup de trafic
-- Testez avec un seul port source avant de tout surveiller
+> ⚠️ **ATTENTION :** Le port destination (mirror target) ne doit **pas** envoyer de trafic, seulement recevoir.
 
 ---
 
 ## 4.3 Vérification pfSense
 
-### 4.3.1 Vérifier la Configuration
+### Dashboard pfSense — Interfaces UP
 
-**Depuis l'interface web pfSense:**
-1. Aller dans `Status → Interfaces`
-2. Vérifier que les interfaces WAN et LAN sont **UP**
-3. Noter l'adresse IP de l'interface LAN (devrait être 192.168.1.1)
+![pfSense — Dashboard principal (interfaces UP)](../../images/pfsense-dashboard.png)
 
-### 4.3.2 Tester la Connectivité
+### Règles Firewall LAN
 
-**Depuis la machine Ubuntu NSOC:**
+![pfSense — Règles firewall LAN](../../images/pfsense-firewall-rules.png)
 
-```bash
-# Ping vers pfSense
-ping -c 5 192.168.1.1
+### Table ARP
 
-# Doit répondre avec succès
-```
+**Diagnostics → ARP Table :**
 
-**Depuis la machine Cliente:**
+![pfSense — Table ARP](../../images/pfsense-arp-table.png)
+
+### Test de connectivité
 
 ```bash
-# Ping vers pfSense
-ping -c 5 192.168.1.1
+# Depuis Ubuntu NSOC
+ping -c 5 192.168.1.1   # → doit répondre OK
 
-# Doit répondre avec succès
+# Depuis la machine cliente
+ping -c 5 192.168.1.1   # → doit répondre OK
 ```
 
-✅ **Si les pings fonctionnent, le routage pfSense est opérationnel!**
+> ✅ **SUCCÈS :** Si les pings fonctionnent, le routage pfSense est opérationnel.
 
 ---
 
 <div style="page-break-after: always;"></div>
 
----
-
-# 🐳 PARTIE 2: Machine Ubuntu (Serveur NSOC)
+# 🐳 PARTIE 2 : Machine Ubuntu (Serveur NSOC)
 
 ## 7.1 Prérequis Ubuntu
 
-**Vérifications avant de commencer:**
+### Configuration système requise pour Elasticsearch
 
 ```bash
-# 1. Vérifier Ubuntu
-lsb_release -a
-# Attendu: Ubuntu 22.04 LTS
-
-# 2. Vérifier Docker
-docker --version
-# Attendu: Docker version 20.10.0+
-
-# 3. Vérifier Docker Compose
-docker compose version
-# Attendu: Docker Compose version v2.0.0+
-
-# 4. Vérifier Git
-git --version
-# Attendu: git version 2.34.0+
-
-# 5. Vérifier l'interface réseau
-ip link show ens33
-# Doit afficher l'interface ens33 en état UP
-```
-
-### 7.1.1 Configuration Système Requise
-
-**Augmenter vm.max_map_count pour Elasticsearch:**
-
-```bash
-# Augmenter la limite (requis pour Elasticsearch)
+# Augmenter vm.max_map_count (obligatoire pour ES)
 echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
-
-# Appliquer immédiatement
 sudo sysctl -w vm.max_map_count=262144
 
 # Vérifier
 sysctl vm.max_map_count
-# Doit afficher: vm.max_map_count = 262144
+# Attendu: vm.max_map_count = 262144
 ```
 
-**⚠️ Important:** Cette étape est **obligatoire**, sinon Elasticsearch ne démarrera pas.
-
-💡 **Note:** Cette configuration est **persistante** - elle survivra aux redémarrages du système grâce à l'écriture dans `/etc/sysctl.conf`.
+> ⚠️ **ATTENTION :** Cette étape est **obligatoire**. Sans elle, Elasticsearch refusera de démarrer.
 
 ---
 
 ## 7.2 Clone du Projet
-
-### 7.2.1 Récupérer le Projet
 
 ```bash
 # Option 1: Cloner depuis Git (recommandé)
 git clone https://github.com/votre-compte/surveillance-reseau.git
 cd surveillance-reseau/surveillance-reseau
 
-# Option 2: Si vous avez reçu une archive
+# Option 2: Archive ZIP
 unzip surveillance-reseau.zip
 cd surveillance-reseau/surveillance-reseau
 ```
 
-### 7.2.2 Vérifier la Structure
-
-```bash
-# Vérifier que tous les fichiers sont présents
-ls -la
-```
-
-**Structure attendue:**
+**Structure attendue :**
 ```
 surveillance-reseau/
-├── docker-compose.yml      ← Orchestration Docker
-├── .env                    ← Variables d'environnement
-├── start.sh                ← Script de démarrage
-├── README.md
-├── configs/                ← Configurations Suricata, Filebeat, Nginx
+├── docker-compose.yml
+├── .env
+├── start.sh
+├── configs/
 │   ├── suricata/
 │   ├── filebeat/
+│   ├── arkime/
 │   └── nginx/
-├── data/                   ← Données PCAP, logs, Elasticsearch
+│       └── html/
+│           ├── index.html
+│           └── enseigne.html
+├── data/
 │   ├── pcap/
 │   ├── logs/
-│   └── elasticsearch/
-├── scripts/                ← Scripts utilitaires
-└── docs/                   ← Documentation
+│   ├── elasticsearch/
+│   └── arkime/
+└── docs/
 ```
-
-✅ **Si tous les répertoires sont présents, continuez!**
 
 ---
 
 ## 7.3 Configuration de l'Interface
 
-### 7.3.1 Identifier Votre Interface Réseau
+### Identifier votre interface réseau
 
 ```bash
-# Lister les interfaces disponibles
 ip link show
-
-# Voir le trafic en temps réel sur l'interface
-sudo tcpdump -i ens33 -c 10
-
-# Si vous voyez des paquets défiler, ens33 est la bonne interface
+sudo tcpdump -i ens33 -c 10   # Vérifier que des paquets arrivent
 ```
 
-**Interfaces courantes:**
-- `ens33` - Interface VMware/VirtualBox standard
-- `eth0` - Interface physique classique
-- `enp0s3` - Interface moderne
-
-### 7.3.2 Éditer le Fichier .env
+### Éditer le fichier `.env`
 
 ```bash
-# Ouvrir le fichier .env
 nano .env
 ```
 
-**Modifier la ligne CAPTURE_INTERFACE:**
-
 ```bash
-# ============================================
-# CONFIGURATION ENVIRONNEMENT
-# ============================================
-
 # Interface réseau à surveiller
-CAPTURE_INTERFACE=ens33  # ← CHANGEZ ICI selon votre interface
+CAPTURE_INTERFACE=ens33    # ← Adapter selon votre interface
 
 # Elasticsearch
-ES_MEMORY=2g  # 1g si vous avez 4GB RAM, 4g si 16GB RAM
+ES_MEMORY=2g               # 1g si 4 GB RAM, 4g si 16 GB RAM
 
-# Rotation PCAP
+# Rétention
 PCAP_RETENTION_DAYS=7
-
-# Logs retention
 LOGS_RETENTION_DAYS=30
 
 # Timezone
 TZ=Africa/Dakar
 ```
 
-**Sauvegarder et quitter:**
-- Appuyez sur `Ctrl+O` puis `Entrée` pour sauvegarder
-- Appuyez sur `Ctrl+X` pour quitter
-
-### 7.3.3 Configurer les Permissions
+### Configurer les permissions
 
 ```bash
-# Créer les répertoires de données si nécessaire
-mkdir -p data/{pcap,logs/suricata,elasticsearch}
+mkdir -p data/{pcap,logs/suricata,logs/arpwatch,elasticsearch,arkime}
 
-# Permissions pour Elasticsearch (IMPORTANT)
-# Elasticsearch s'exécute avec l'UID 1000 dans Docker
+# Elasticsearch (UID 1000 dans Docker)
 sudo chown -R 1000:1000 data/elasticsearch
 chmod -R 700 data/elasticsearch
 
-# Permissions pour les logs
-chmod -R 755 data/logs data/pcap
+# Logs et PCAP
+chmod -R 755 data/logs data/pcap data/arkime
 
-# Permissions pour Filebeat (CRITIQUE)
+# Filebeat (critique)
 sudo chown root:root configs/filebeat/filebeat.yml
 sudo chmod 644 configs/filebeat/filebeat.yml
 ```
@@ -556,130 +437,70 @@ sudo chmod 644 configs/filebeat/filebeat.yml
 
 ## 7.4 Lancement Docker Compose
 
-### 7.4.1 Démarrer Tous les Services
+### Démarrer les 12 services
 
 ```bash
-# Se placer dans le répertoire du projet
 cd /chemin/vers/surveillance-reseau/surveillance-reseau
-
-# Démarrer tous les conteneurs en arrière-plan
 docker compose up -d
 ```
 
-**Ce qui se passe:**
-1. ⬇️ Téléchargement des images Docker (première fois: 5-10 minutes)
-2. 🏗️ Création du réseau Docker
-3. 🚀 Démarrage des 6 conteneurs:
-   - Elasticsearch (stockage)
-   - Kibana (visualisation)
-   - Suricata (IDS)
-   - Tcpdump (capture PCAP)
-   - Filebeat (envoi logs)
-   - Nginx (page d'accueil)
-4. ⏱️ Initialisation (2-3 minutes)
+**Séquence de démarrage :**
+```
+1. ⬇️ Téléchargement des images (1ère fois: 10-15 min)
+2. 🏗️ Création du réseau Docker surveillance-net
+3. 🚀 Démarrage des 12 containers
+4. ⏱️ Initialisation ES + Kibana (2-3 min)
+5. ✅ kibana-init configure les Data Views et Dashboards
+```
 
-### 7.4.2 Attendre le Démarrage Complet
+### Vérifier l'état
 
 ```bash
-# Suivre les logs en temps réel
-docker compose logs -f
-
-# Appuyez sur Ctrl+C pour arrêter de suivre les logs
-```
-
-**⏱️ Attendez 2-3 minutes** que tous les services soient pleinement opérationnels.
-
-![Conteneurs Docker actifs](../../images/portainer-container.png)
-
-### 7.4.3 Accès à la Page d'Accueil
-
-**Ouvrir un navigateur et aller sur:**
-```
-http://192.168.1.100
-```
-
-**Vous devriez voir la page d'accueil du NSOC:**
-
-![Page d'accueil Network Security Operations Center](../../images/surveillance.png)
-
-**La page d'accueil offre:**
-- Liens rapides vers Kibana, Elasticsearch, Portainer
-- Statut des services
-- Documentation accessible
-
-### 7.4.4 Vérifier l'État des Conteneurs
-
-```bash
-# Voir l'état de tous les conteneurs
 docker compose ps
 ```
 
-**Sortie attendue:**
+**Sortie attendue (12 containers UP) :**
 ```
-NAME                           STATUS
-surveillance-elasticsearch     Up (healthy)
-surveillance-kibana            Up (healthy)
-surveillance-suricata          Up
-surveillance-tcpdump           Up
-surveillance-filebeat          Up
-surveillance-nginx             Up
+NAME                              STATUS
+surveillance-elasticsearch        Up (healthy)
+surveillance-kibana               Up (healthy)
+surveillance-suricata             Up
+surveillance-tcpdump              Up
+surveillance-arpwatch             Up
+surveillance-filebeat             Up
+surveillance-arkime-capture       Up
+surveillance-arkime               Up
+surveillance-nginx                Up
+surveillance-portainer            Up
+surveillance-status-api           Up
+surveillance-kibana-init          Exited (0)   ← Normal après init
 ```
 
-**✅ Tous les conteneurs doivent être "Up"**
+> ✅ **SUCCÈS :** Tous les containers doivent être `Up`. `kibana-init` peut être `Exited (0)` (exécution unique).
 
-**❌ Si un conteneur est en erreur:**
-```bash
-# Voir les logs du conteneur problématique
-docker compose logs [nom-conteneur]
-
-# Exemples:
-docker compose logs elasticsearch
-docker compose logs suricata
-```
+> ⚠️ **ATTENTION :** Si un container est en erreur, consulter la [section dépannage](#21-dépannage).
 
 ---
 
 ## 7.5 Vérification via Portainer
 
-**Portainer** est une interface web pour gérer Docker facilement.
+**Accès :** `http://192.168.1.100:9000`
 
-### 7.5.1 Accéder à Portainer
+**Première connexion :** Créer un compte administrateur.
 
-**Ouvrir un navigateur web et aller sur:**
+### Containers dans Portainer
+
+![Portainer — liste des containers](../../images/portainer-containers.png)
+
+**Dans Portainer : Containers → vérifier que 7+ containers sont `Running`**
+
+### Logs d'un container (Suricata)
+
+![Portainer — logs Suricata](../../images/portainer-container-logs.png)
+
+**Logs normaux de Suricata :**
 ```
-http://192.168.1.100:9000
-```
-
-**Première connexion:**
-1. Créer un compte admin
-2. Choisir un mot de passe sécurisé
-3. Cliquer sur "Create user"
-
-### 7.5.2 Vérifier les Conteneurs
-
-**Dans Portainer:**
-1. Cliquer sur "Local" (environnement Docker local)
-2. Aller dans "Containers"
-3. Vérifier que **6 conteneurs** sont actifs:
-
-**États attendus:**
-- ✅ **surveillance-elasticsearch**: Running, Healthy
-- ✅ **surveillance-kibana**: Running, Healthy
-- ✅ **surveillance-suricata**: Running
-- ✅ **surveillance-tcpdump**: Running
-- ✅ **surveillance-filebeat**: Running
-- ✅ **surveillance-nginx**: Running
-
-### 7.5.3 Vérifier les Logs
-
-**Dans Portainer:**
-1. Cliquer sur un conteneur (ex: `surveillance-suricata`)
-2. Cliquer sur "Logs"
-3. Vérifier qu'il n'y a pas d'erreurs critiques
-
-**Logs normaux de Suricata:**
-```
-<Notice> - all 4 packet processing threads, 4 management threads initialized, engine started.
+<Notice> - all 4 packet processing threads initialized, engine started.
 <Info> - Stats: Total: 0 (Pkts/s: 0), Alert: 0 (Pkts/s: 0)
 ```
 
@@ -687,714 +508,578 @@ http://192.168.1.100:9000
 
 ## 7.6 Vérification via Kibana
 
-**Kibana** est l'interface de visualisation des données capturées.
+**Accès :** `http://192.168.1.100:5601`
+**Credentials :** `elastic` / `changeme`
 
-### 7.6.1 Accéder à Kibana
-
-**Ouvrir un navigateur et aller sur:**
-```
-http://192.168.1.100:5601
-```
-
-**Première ouverture:**
-1. Cliquer sur "Explore on my own"
-2. Patienter quelques secondes
-
-### 7.6.2 Créer un Data View
-
-**Les Data Views permettent de visualiser les données Elasticsearch.**
-
-1. Dans Kibana, aller dans: **Menu (☰) → Management → Data Views**
-2. Cliquer sur "Create data view"
-3. Remplir les champs:
-   - **Name:** `suricata-*`
-   - **Index pattern:** `suricata-*`
-   - **Timestamp field:** `@timestamp`
-4. Cliquer sur "Save data view to Kibana"
-
-### 7.6.3 Vérifier les Événements Capturés
-
-1. Aller dans: **Menu (☰) → Analytics → Discover**
-2. Sélectionner le data view: `suricata-*`
-3. Ajuster la plage de temps: **Last 15 minutes**
-
-**Vous devriez voir des événements capturés!**
-
-**Si aucun événement:**
-- ⏱️ Attendre 2-3 minutes supplémentaires
-- Générer du trafic réseau (voir PARTIE 3)
-- Vérifier les logs de Suricata: `docker compose logs suricata`
-
-### 7.6.4 Vérifier les Différents Types d'Événements
-
-**Dans Kibana Discover, rechercher:**
+### Créer un Data View (si non créé automatiquement)
 
 ```
-event_type:dns
+Menu (☰) → Management → Data Views → Create data view
+Name: suricata-*
+Index pattern: suricata-*
+Timestamp field: @timestamp
+→ Save data view to Kibana
 ```
-→ Doit afficher les requêtes DNS capturées
+
+> 💡 **INFO :** Kibana reçoit des logs de **3 sources distinctes** — choisir le bon Data View selon ce qu'on veut analyser :
+>
+> | Data View | Source | Ce qu'on y trouve |
+> |-----------|--------|------------------|
+> | `suricata-*` | Suricata IDS | dns, tls, alert, http, flow |
+> | `arpwatch-*` | ARPWatch | new station, changed mac, flip-flop |
+> | `pfsense-*` | pfSense Firewall | règles firewall, trafic bloqué, DHCP |
+
+### Vérifier les événements Suricata
 
 ```
-event_type:flow
+Menu (☰) → Analytics → Discover
+Data view: suricata-*
+Plage: Last 15 minutes
 ```
-→ Doit afficher les flux réseau
+
+**Filtrer par type d'event :**
+```kql
+event_type: "dns"     → Requêtes DNS capturées
+event_type: "tls"     → Connexions HTTPS (SNI visible)
+event_type: "alert"   → Alertes IDS Suricata
+event_type: "flow"    → Flux réseau
+```
+
+### Vérifier les événements ARPWatch
 
 ```
-event_type:alert
+Menu (☰) → Analytics → Discover
+Data view: arpwatch-*
+Plage: Last 1 hour
 ```
-→ Doit afficher les alertes IDS (s'il y en a)
 
-![Recherche d'événements Suricata](../../images/suricata.png)
+**Types d'events :**
+```kql
+event_type: "new station"    → Nouvel équipement détecté
+event_type: "changed mac"    → ⚠️ ARP spoofing potentiel !
+event_type: "flip-flop"      → ⚠️ Attaque MITM potentielle !
+ip: "192.168.1.50"           → Events liés au client
+```
+
+### Vérifier les logs pfSense
+
+```
+Menu (☰) → Analytics → Discover
+Data view: pfsense-*
+Plage: Last 15 minutes
+```
+
+**Filtres utiles :**
+```kql
+action: "block"              → Trafic bloqué par le firewall
+src_ip: "192.168.1.50"       → Trafic du client
+dest_port: 80                → Connexions HTTP
+dest_port: 443               → Connexions HTTPS
+```
+
+### Vérifier les Dashboards
+
+```
+Menu (☰) → Analytics → Dashboards
+→ Dashboard #1 : Vue d'ensemble (Suricata + ARPWatch + pfSense)
+→ Dashboard #2 : Alertes IDS en temps réel
+```
+
+> 💡 **INFO :** Si aucun événement n'apparaît dans un index, vérifiez que la source correspondante est bien active : `docker compose logs suricata`, `docker compose logs arpwatch`, et que pfSense envoie bien ses syslog vers le serveur NSOC.
+
+---
+
+## 7.7 Vérification Arkime v5
+
+**Accès :** `http://192.168.1.100:8005`
+**Credentials :** `admin` / `admin`
+
+### Sessions PCAP
+
+```
+1. Naviguer vers http://192.168.1.100:8005
+2. Login: admin / admin
+3. Onglet "Sessions" → liste des sessions réseau capturées
+```
+
+> ✅ **SUCCÈS :** Des sessions réseau doivent apparaître dans la liste Arkime.
+
+**Vérification via curl :**
+```bash
+# Test de connectivité Arkime
+curl -u admin:admin http://localhost:8005/api/sessions
+```
+
+---
+
+## 7.8 Vérification Enseigne Légale
+
+**Accès :** `http://192.168.1.100/enseigne.html`
+
+**Test depuis Ubuntu NSOC :**
+```bash
+curl -s http://localhost/enseigne.html | head -20
+```
+
+**Test depuis la machine cliente :**
+```bash
+curl -s http://192.168.1.100/enseigne.html
+```
+
+> ✅ **SUCCÈS :** La page enseigne doit afficher l'avertissement de surveillance réseau.
+
+![Enseigne légale](../../images/enseigne-legale.png)
+
+---
+
+## 7.9 Vérification Status API
+
+**Accès :** `http://192.168.1.100:8888/health`
+
+```bash
+# Vérifier la santé de tous les services
+curl http://localhost:8888/health | jq '.'
+```
+
+**Réponse attendue :**
+```json
+{
+  "status": "ok",
+  "services": {
+    "elasticsearch": "up",
+    "kibana": "up",
+    "arkime": "up",
+    "suricata": "up",
+    "filebeat": "up"
+  }
+}
+```
+
+> ✅ **SUCCÈS :** Tous les services doivent être `"up"`.
 
 ---
 
 <div style="page-break-after: always;"></div>
 
----
+# 💻 PARTIE 3 : Machine Cliente Linux
 
-# 💻 PARTIE 3: Machine Cliente Linux
+## 16.1 Configuration Réseau
 
-## 13.1 Configuration Réseau
-
-### 13.1.1 Vérifier la Connectivité
-
-**Depuis la machine Cliente Linux:**
+### Vérifier et configurer l'IP
 
 ```bash
-# Vérifier l'adresse IP
+# Vérifier l'adresse IP actuelle
 ip addr show
-
-# Doit afficher une IP dans le réseau 192.168.1.0/24
-# Exemple: 192.168.1.50
 ```
 
-**Si pas d'IP configurée:**
+**Configuration IP du client :**
 
+![Client — ip addr show](../../images/client-ip-config.png)
+
+**Si pas d'IP configurée :**
 ```bash
-# Configuration IP statique temporaire
 sudo ip addr add 192.168.1.50/24 dev ens33
 sudo ip route add default via 192.168.1.1
-
-# Configuration DNS
 echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
 ```
 
-### 13.1.2 Tester la Connectivité
+### Tester la connectivité
 
 ```bash
-# Ping vers le gateway (pfSense)
-ping -c 5 192.168.1.1
-
-# Ping vers le serveur NSOC
-ping -c 5 192.168.1.100
-
-# Ping vers Internet
-ping -c 5 8.8.8.8
-
-# Test DNS
-nslookup google.com
+ping -c 5 192.168.1.1    # Gateway pfSense
+ping -c 5 192.168.1.100  # Serveur NSOC
+ping -c 5 8.8.8.8        # Internet
 ```
 
-**✅ Si tous les pings fonctionnent, la configuration réseau est OK!**
+**Ping vers pfSense réussi :**
+
+![Client — ping vers pfSense OK](../../images/client-ping-pfsense.png)
+
+> ✅ **SUCCÈS :** Si les 3 pings fonctionnent, la configuration réseau est correcte.
+
+### Accéder à l'enseigne NSOC
+
+Depuis le navigateur du client, ouvrir : `http://192.168.1.100/enseigne.html`
+
+![Client — ouverture enseigne NSOC](../../images/client-voir-enseigne.png)
 
 ---
 
-## 13.2 Génération de Trafic
+## 16.2 Génération de Trafic
 
-### 13.2.1 Trafic Web (HTTP/HTTPS)
+### Trafic Web et DNS
 
 ```bash
-# Navigation web basique
+# Requêtes HTTPS (génère des events TLS)
 curl https://www.google.com
 curl https://www.youtube.com
 curl https://www.github.com
 
-# Téléchargement d'un fichier
-wget https://www.google.com/robots.txt
+# Requêtes DNS
+nslookup google.com
+dig youtube.com A
+dig facebook.com AAAA
 
-# Requêtes DNS multiples
+# Boucle DNS multiple
 for domain in google.com youtube.com facebook.com twitter.com; do
     nslookup $domain
     sleep 1
 done
 ```
 
-### 13.2.2 Trafic ICMP (Ping)
+### Générer une alerte Suricata (IDS test)
 
 ```bash
-# Ping continu vers plusieurs destinations
-ping -c 10 8.8.8.8
-ping -c 10 1.1.1.1
-ping -c 10 google.com
-```
-
-### 13.2.3 Trafic DNS
-
-```bash
-# Requêtes DNS multiples
-dig google.com
-dig youtube.com A
-dig facebook.com AAAA
-dig twitter.com MX
-```
-
-### 13.2.4 Navigation Web (avec Interface Graphique)
-
-**Ouvrir un navigateur web (Firefox/Chrome) et visiter:**
-- https://www.google.com
-- https://www.youtube.com
-- https://www.github.com
-- https://www.wikipedia.org
-
-### 13.2.5 Trafic de Test IDS
-
-**Générer une alerte Suricata pour tester l'IDS:**
-
-```bash
-# Déclencher une alerte de test
+# Déclencher une alerte IDS connue
 curl http://testmyids.com
-
-# Cette requête devrait générer une alerte dans Suricata
 ```
+
+**Sortie attendue dans Kibana :** `event_type: "alert"` avec signature `GPL ATTACK_RESPONSE id check returned root`
+
+### Capture d'écran génération de trafic
+
+![Client — génération de trafic (curl/nslookup)](../../images/client-traffic-gen.png)
 
 ---
 
-## 13.3 Vérification dans Kibana
+## 16.3 Vérification dans Kibana
 
-### 13.3.1 Retour sur la Machine Ubuntu
+### Rechercher les événements du client
 
-**Depuis la machine Ubuntu NSOC, ouvrir Kibana:**
-```
-http://192.168.1.100:5601
-```
+**Dans Kibana Discover :**
 
-### 13.3.2 Rechercher les Événements du Client
-
-**Dans Kibana Discover:**
-
-1. Sélectionner le data view: `suricata-*`
-2. Plage de temps: **Last 15 minutes**
-3. Rechercher par IP source:
-
-```
-src_ip:"192.168.1.50"
+```kql
+src_ip: "192.168.1.50"
 ```
 
-**Vous devriez voir tous les événements générés par le client!**
+**Kibana — Events Suricata filtrés sur le client :**
 
-### 13.3.3 Analyser les Requêtes DNS
+![Kibana — Events Suricata src_ip 192.168.1.50](../../images/kibana-suricata-client.png)
 
-**Rechercher les requêtes DNS du client:**
+### Analyses complémentaires par index
 
-```
-src_ip:"192.168.1.50" AND event_type:"dns"
-```
-
-**Analyser les champs:**
-- `dns.query.name` - Domaine interrogé
-- `dns.query.type` - Type de requête (A, AAAA, MX, etc.)
-- `dns.answers` - Réponses DNS
-
-### 13.3.4 Vérifier les Alertes IDS
-
-**Rechercher les alertes générées:**
-
-```
-event_type:"alert"
+*`suricata-*` — events IDS générés par le client :*
+```kql
+src_ip: "192.168.1.50" AND event_type: "dns"
+src_ip: "192.168.1.50" AND event_type: "tls"
+src_ip: "192.168.1.50" AND event_type: "alert"
 ```
 
-**Si vous avez fait `curl http://testmyids.com`, vous devriez voir:**
-- Alert signature: "GPL ATTACK_RESPONSE id check returned root"
-- Severity: High
+*`arpwatch-*` — présence du client sur le réseau :*
+```kql
+ip: "192.168.1.50"
+```
+> La connexion du client génère automatiquement un event `new station` dans ARPWatch.
+
+*`pfsense-*` — trafic du client vu par le firewall :*
+```kql
+src_ip: "192.168.1.50"
+```
+> Montre tout le trafic passant par pfSense depuis le client (autorisé et bloqué).
+
+> ✅ **SUCCÈS :** Si des événements du client apparaissent dans Kibana, le pipeline complet fonctionne.
 
 ---
 
 <div style="page-break-after: always;"></div>
 
+# 🔍 PARTIE 4 : Validation et Maintenance
+
+## 19. Checklist de Validation Complète
+
+### Machine pfSense
+
+- [ ] pfSense accessible via interface web (`https://192.168.1.1`)
+- [ ] Interfaces WAN et LAN UP (Status → Interfaces)
+- [ ] Port mirroring configuré et actif
+- [ ] Routage fonctionnel (ping depuis client vers Internet)
+- [ ] Table ARP visible (Diagnostics → ARP Table)
+- [ ] Règles Firewall LAN configurées
+
+### Machine Ubuntu NSOC — Containers
+
+- [ ] `docker compose ps` → 12 containers (11 Up + kibana-init Exited 0)
+- [ ] Elasticsearch répond : `curl http://localhost:9200/_cluster/health`
+- [ ] Kibana accessible : `http://192.168.1.100:5601`
+- [ ] Arkime v5 accessible : `http://192.168.1.100:8005` (login admin/admin)
+- [ ] Portainer accessible : `http://192.168.1.100:9000`
+- [ ] Page d'accueil Nginx : `http://192.168.1.100`
+- [ ] Enseigne légale : `http://192.168.1.100/enseigne.html`
+- [ ] Status API répond : `curl http://localhost:8888/health`
+
+### Machine Ubuntu NSOC — Données
+
+- [ ] Fichiers PCAP créés : `ls data/pcap/$(date +%Y-%m-%d)/`
+- [ ] Logs Suricata présents : `wc -l data/logs/suricata/eve.json`
+- [ ] `eve.json` grossit en temps réel : `tail -f data/logs/suricata/eve.json`
+- [ ] Index Elasticsearch créés : `curl http://localhost:9200/_cat/indices?v`
+- [ ] Index `suricata-*` présent avec documents (count > 0)
+- [ ] Index `arpwatch-*` présent avec documents
+- [ ] Index `pfsense-*` présent avec documents (syslog pfSense configuré)
+- [ ] Data View `suricata-*` créé dans Kibana
+- [ ] Data View `arpwatch-*` créé dans Kibana
+- [ ] Data View `pfsense-*` créé dans Kibana
+- [ ] Dashboards visibles dans Kibana (Analytics → Dashboards)
+- [ ] Sessions PCAP visibles dans Arkime
+
+### Machine Cliente
+
+- [ ] Connectivité réseau OK (ping pfSense + NSOC + Internet)
+- [ ] IP configurée dans `192.168.1.0/24`
+- [ ] Enseigne NSOC visible depuis le client (`http://192.168.1.100/enseigne.html`)
+- [ ] Trafic web généré (curl, nslookup)
+- [ ] Événements du client visibles dans Kibana (`src_ip:"192.168.1.50"`)
+
 ---
 
-# 🔍 PARTIE 4: Validation et Maintenance
+## 20. Tests de Bout en Bout
 
-## 16. Tests de Bout en Bout
-
-### 16.1 Checklist de Validation Complète
-
-**Validez chaque étape pour confirmer que le laboratoire fonctionne correctement:**
-
-**Machine pfSense:**
-- [ ] pfSense accessible via interface web
-- [ ] Port mirroring configuré et actif
-- [ ] Interfaces WAN et LAN UP
-- [ ] Routage fonctionnel (ping depuis client vers Internet)
-
-**Machine Ubuntu NSOC:**
-- [ ] Tous les 6 conteneurs Docker sont UP
-- [ ] Elasticsearch répond sur port 9200
-- [ ] Kibana accessible sur port 5601
-- [ ] Portainer accessible sur port 9000
-- [ ] Page d'accueil Nginx accessible sur port 80
-- [ ] Fichiers PCAP créés dans `data/pcap/`
-- [ ] Logs Suricata présents dans `data/logs/suricata/eve.json`
-- [ ] Fichier `eve.json` grossit en temps réel
-- [ ] Index `suricata-*` créés dans Elasticsearch
-- [ ] Documents indexés dans Elasticsearch (count > 0)
-- [ ] Recherche fonctionnelle dans Kibana
-
-**Machine Cliente:**
-- [ ] Connectivité réseau OK (ping vers pfSense, NSOC, Internet)
-- [ ] Trafic web généré
-- [ ] Requêtes DNS effectuées
-- [ ] Événements visibles dans Kibana
-
-### 16.2 Test de Bout en Bout Complet
-
-**Scénario de test:**
+### Scénario de test complet
 
 ```bash
-# 1. Depuis la machine Cliente
+# === MACHINE CLIENTE ===
 ping -c 5 8.8.8.8
 curl https://www.google.com
 nslookup youtube.com
+curl http://testmyids.com    # Déclenche une alerte Suricata
 
-# 2. Depuis la machine Ubuntu NSOC
-# Attendre 30 secondes puis vérifier les logs
+# === MACHINE UBUNTU NSOC (attendre 30 sec) ===
+# Vérifier que le trafic du client est capturé
 tail -f data/logs/suricata/eve.json | jq 'select(.src_ip=="192.168.1.50")'
 
-# 3. Dans Kibana (http://192.168.1.100:5601)
+# === KIBANA (http://192.168.1.100:5601) ===
 # Rechercher: src_ip:"192.168.1.50"
-# Doit afficher les événements du client
+# Doit afficher tous les événements générés par le client
 ```
 
-**✅ Si vous voyez les événements du client dans Kibana, le système fonctionne parfaitement!**
+> ✅ **SUCCÈS :** Si les événements du client apparaissent dans Kibana, le pipeline Client → pfSense → NSOC → Kibana est opérationnel.
 
 ---
 
-## 17. Dépannage par Machine
+## 21. Dépannage
 
-### 17.1 Dépannage Machine pfSense
+### 21.1 pfSense — Pas de trafic capturé
 
-#### Problème: Pas de trafic capturé sur Ubuntu
-
-**Diagnostic:**
 ```bash
-# Sur Ubuntu NSOC, vérifier la capture
+# Sur Ubuntu NSOC — tester la capture manuelle
 sudo tcpdump -i ens33 -c 50
 
 # Si aucun paquet → problème de port mirroring
+# Vérifier le câblage et la config du switch
 ```
 
-**Solutions:**
-1. Vérifier que le port mirroring est bien configuré sur le switch
-2. Vérifier que le câble est bien connecté au bon port
-3. Vérifier que l'interface pfSense source est active
-4. Redémarrer le switch si nécessaire
+### 21.2 Elasticsearch ne démarre pas
 
-#### Problème: Client ne peut pas accéder à Internet
+**Erreur :** `max virtual memory areas vm.max_map_count is too low`
 
-**Diagnostic:**
-```bash
-# Depuis le client
-ping 192.168.1.1  # Test gateway
-ping 8.8.8.8      # Test Internet
-```
-
-**Solutions:**
-1. Vérifier la configuration NAT sur pfSense
-2. Vérifier les règles firewall sur pfSense
-3. Vérifier la passerelle par défaut du client
-
----
-
-### 17.2 Dépannage Machine Ubuntu NSOC
-
-#### Problème: Elasticsearch ne démarre pas
-
-**Erreur:** "max virtual memory areas vm.max_map_count is too low"
-
-**Solution:**
 ```bash
 sudo sysctl -w vm.max_map_count=262144
 echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
 docker compose restart elasticsearch
 ```
 
-#### Problème: Pas de capture réseau (fichiers PCAP vides)
+### 21.3 Filebeat — "config file must be owned by root"
 
-**Diagnostic:**
 ```bash
-# Vérifier l'interface disponible
-ip link show
-
-# Tester la capture manuelle
-sudo tcpdump -i ens33 -c 10
-```
-
-**Solutions:**
-```bash
-# Si mauvaise interface dans .env
-nano .env
-# Modifier CAPTURE_INTERFACE avec la bonne interface
-
-# Redémarrer les services de capture
-docker compose restart tcpdump suricata
-```
-
-#### Problème: Kibana "Server is not ready yet"
-
-**Solutions:**
-```bash
-# Attendre 2-3 minutes supplémentaires
-
-# Vérifier qu'Elasticsearch est bien UP
-curl http://localhost:9200/_cluster/health?pretty
-
-# Vérifier les logs Kibana
-docker compose logs kibana | tail -50
-
-# Redémarrer Kibana
-docker compose restart kibana
-```
-
-#### Problème: Filebeat "config file must be owned by root"
-
-**Solution:**
-```bash
-# Corriger les permissions
 sudo chown root:root configs/filebeat/filebeat.yml
 sudo chmod 644 configs/filebeat/filebeat.yml
-
-# Recréer le conteneur
 docker compose rm -f filebeat
 docker compose up -d filebeat
 ```
 
-#### Problème: Services lents ou manque de mémoire
+### 21.4 Kibana — "Server is not ready yet"
 
-**Diagnostic:**
 ```bash
-# Voir l'utilisation RAM
-free -h
-docker stats
+# Vérifier ES d'abord
+curl -u elastic:changeme http://localhost:9200/_cluster/health?pretty
+
+# Attendre 3 min puis vérifier Kibana
+docker compose logs kibana | tail -50
+docker compose restart kibana
 ```
 
-**Solution:**
+### 21.5 Arkime — Pas de sessions
+
 ```bash
+# Vérifier les logs Arkime Capture
+docker compose logs arkime-capture | tail -50
+
+# Vérifier que des paquets arrivent sur l'interface
+sudo tcpdump -i ens33 -c 20
+
+# Redémarrer Arkime
+docker compose restart arkime-capture arkime
+```
+
+### 21.6 Manque de mémoire
+
+```bash
+free -h
+docker stats
+
 # Réduire la RAM d'Elasticsearch
 nano .env
-# Changer ES_MEMORY=2g → ES_MEMORY=1g
-
-# Redémarrer
+# ES_MEMORY=2g → ES_MEMORY=1g
 docker compose restart elasticsearch
 ```
 
-#### Problème: Suricata ne capture pas
+### 21.7 Permissions volumes
 
-**Diagnostic:**
 ```bash
-# Vérifier les logs Suricata
-docker compose logs suricata | tail -50
-
-# Vérifier l'interface réseau
-ip link show ens33
-```
-
-**Solutions:**
-```bash
-# Vérifier que l'interface est correcte dans .env
-nano .env
-
-# Redémarrer Suricata
-docker compose restart suricata
-
-# Vérifier que des paquets arrivent
-sudo tcpdump -i ens33 -c 10
-```
-
-#### Problème: Permission denied sur les volumes
-
-**Solution:**
-```bash
-# Corriger les permissions
-sudo chmod -R 777 data/elasticsearch
-sudo chmod -R 755 data/logs data/pcap
 sudo chown -R 1000:1000 data/elasticsearch
+sudo chmod -R 755 data/logs data/pcap data/arkime
 ```
 
 ---
 
-### 17.3 Dépannage Machine Cliente
+## 22. Commandes de Référence
 
-#### Problème: Pas de connectivité réseau
+### Gestion Docker Compose
 
-**Diagnostic:**
 ```bash
-# Vérifier l'interface
-ip addr show
-
-# Vérifier la route par défaut
-ip route show
-
-# Ping vers gateway
-ping -c 5 192.168.1.1
-```
-
-**Solutions:**
-```bash
-# Reconfigurer l'IP
-sudo ip addr add 192.168.1.50/24 dev ens33
-sudo ip route add default via 192.168.1.1
-
-# Configurer DNS
-echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
-```
-
-#### Problème: Événements client pas visibles dans Kibana
-
-**Diagnostic:**
-```bash
-# Sur Ubuntu NSOC, vérifier que le trafic est capturé
-sudo tcpdump -i ens33 host 192.168.1.50 -c 20
-```
-
-**Solutions:**
-1. Vérifier que le port mirroring est actif
-2. Générer plus de trafic depuis le client
-3. Attendre 1-2 minutes pour l'indexation dans Elasticsearch
-4. Vérifier les logs Filebeat: `docker compose logs filebeat`
-
----
-
-## 18. Commandes de Référence
-
-### 18.1 Commandes Machine Ubuntu NSOC
-
-**Gestion Docker Compose:**
-```bash
-# DÉMARRAGE
-cd /chemin/vers/surveillance-reseau/surveillance-reseau
+# Démarrer
 docker compose up -d
 
-# ARRÊT
+# Arrêter
 docker compose down
 
-# REDÉMARRAGE COMPLET
-docker compose restart
+# Redémarrer un service
+docker compose restart suricata
+docker compose restart kibana
+docker compose restart arkime
 
-# REDÉMARRER UN SERVICE SPÉCIFIQUE
-docker compose restart [service]
-# Exemples: elasticsearch, kibana, suricata, tcpdump, filebeat, nginx
+# Logs en temps réel
+docker compose logs -f suricata
+docker compose logs -f arkime
+docker compose logs --tail 50 elasticsearch
 
-# VOIR L'ÉTAT DES CONTENEURS
+# État des containers
 docker compose ps
-
-# VOIR LES LOGS
-docker compose logs                    # Tous les services
-docker compose logs -f [service]       # Un service en temps réel
-docker compose logs --tail 50 [service] # 50 dernières lignes
-
-# STATS RESSOURCES
 docker stats
-
-# ENTRER DANS UN CONTENEUR
-docker compose exec [service] bash
 ```
 
-**Vérification des Captures:**
+### Vérification des données
+
 ```bash
-# VOIR LES FICHIERS PCAP
-ls -lh data/pcap/$(date +%Y-%m-%d)/
-
-# VOIR LES LOGS SURICATA
-tail -f data/logs/suricata/eve.json
-
-# VOIR LES LOGS SURICATA FORMATÉS (avec jq)
+# Logs Suricata en temps réel
 tail -f data/logs/suricata/eve.json | jq '.'
 
-# COMPTER LES ÉVÉNEMENTS CAPTURÉS
+# Filtrer par type
+tail -f data/logs/suricata/eve.json | jq 'select(.event_type=="alert")'
+tail -f data/logs/suricata/eve.json | jq 'select(.event_type=="dns")'
+tail -f data/logs/suricata/eve.json | jq 'select(.src_ip=="192.168.1.50")'
+
+# Compter les événements
 wc -l data/logs/suricata/eve.json
 
-# VOIR SEULEMENT LES ALERTES
-tail -f data/logs/suricata/eve.json | jq 'select(.event_type=="alert")'
-
-# VOIR SEULEMENT LES REQUÊTES DNS
-tail -f data/logs/suricata/eve.json | jq 'select(.event_type=="dns")'
-
-# VOIR SEULEMENT LES FLUX RÉSEAU
-tail -f data/logs/suricata/eve.json | jq 'select(.event_type=="flow")'
+# Fichiers PCAP
+ls -lh data/pcap/$(date +%Y-%m-%d)/
 ```
 
-**Vérification Elasticsearch:**
+### Vérification Elasticsearch
+
 ```bash
-# VÉRIFIER L'ÉTAT DU CLUSTER
-curl http://localhost:9200/_cluster/health?pretty
-
-# LISTER LES INDEX
-curl http://localhost:9200/_cat/indices?v
-
-# COMPTER LES DOCUMENTS INDEXÉS
-curl -s "http://localhost:9200/suricata-*/_count" | jq '.'
-
-# VOIR UN EXEMPLE DE DOCUMENT
-curl -s "http://localhost:9200/suricata-*/_search?size=1&pretty"
-
-# SUPPRIMER UN INDEX (ATTENTION: perte de données)
-curl -X DELETE "http://localhost:9200/suricata-2026.02.15"
+# Avec authentification
+curl -u elastic:changeme http://localhost:9200/_cluster/health?pretty
+curl -u elastic:changeme http://localhost:9200/_cat/indices?v
+curl -u elastic:changeme "http://localhost:9200/suricata-*/_count" | jq '.'
 ```
 
-**Monitoring Système:**
+### Vérification Arkime
+
 ```bash
-# ESPACE DISQUE
-df -h
+# Test API Arkime
+curl -u admin:admin http://localhost:8005/api/sessions | jq '.'
 
-# MÉMOIRE RAM
-free -h
-
-# UTILISATION CPU/RAM EN TEMPS RÉEL
-htop
-
-# TRAFIC RÉSEAU
-sudo tcpdump -i ens33 -c 50
-
-# STATS INTERFACE RÉSEAU
-ifstat -i ens33
+# Vérifier les stats
+curl -u admin:admin http://localhost:8005/api/stats | jq '.'
 ```
 
-**Commandes Utiles (Manuelles):**
-```bash
-# BACKUP DES CONFIGURATIONS (à faire manuellement)
-tar -czf backup-configs-$(date +%F).tar.gz configs/ .env docker-compose.yml
+### URLs de référence
 
-# La placer dans un endroit sûr
-mv backup-configs-*.tar.gz ~/backups/
-
-# NETTOYAGE PCAP ANCIEN (si espace disque faible)
-# ⚠️ ATTENTION: Supprime les données > 7 jours!
-find data/pcap/ -type f -mtime +7 -delete
-
-# Vérifier l'espace libéré
-df -h
-
-# METTRE À JOUR LES IMAGES DOCKER
-docker compose pull
-docker compose up -d
-```
-
-⚠️ **Note:** Ces commandes sont à exécuter **manuellement** selon vos besoins. Aucune automatisation (crontab) n'a été configurée.
-
----
-
-### 18.2 Commandes Machine Cliente
-
-**Tests de Connectivité:**
-```bash
-# PING VERS GATEWAY
-ping -c 5 192.168.1.1
-
-# PING VERS SERVEUR NSOC
-ping -c 5 192.168.1.100
-
-# PING VERS INTERNET
-ping -c 5 8.8.8.8
-
-# TEST DNS
-nslookup google.com
-dig youtube.com
-```
-
-**Génération de Trafic:**
-```bash
-# TRAFIC WEB
-curl https://www.google.com
-wget https://www.github.com/robots.txt
-
-# TRAFIC DNS
-for domain in google.com youtube.com facebook.com; do
-    nslookup $domain
-    sleep 1
-done
-
-# DÉCLENCHER ALERTE IDS
-curl http://testmyids.com
-```
-
----
-
-### 18.3 URLs d'Accès
-
-**Depuis un navigateur sur le réseau 192.168.1.0/24:**
-
-| Service | URL | Description |
+| Service | URL | Credentials |
 |---------|-----|-------------|
-| **pfSense** | https://192.168.1.1 | Interface web pfSense |
-| **Page d'accueil NSOC** | http://192.168.1.100 | Page d'accueil HTML |
-| **Kibana** | http://192.168.1.100:5601 | Visualisation données |
-| **Elasticsearch** | http://192.168.1.100:9200 | API Elasticsearch |
-| **Portainer** | http://192.168.1.100:9000 | Gestion Docker |
+| **Page d'accueil NSOC** | `http://192.168.1.100` | — |
+| **Enseigne légale** | `http://192.168.1.100/enseigne.html` | — |
+| **Kibana** | `http://192.168.1.100:5601` | elastic / changeme |
+| **Arkime v5** | `http://192.168.1.100:8005` | admin / admin |
+| **Portainer** | `http://192.168.1.100:9000` | À définir |
+| **Status API** | `http://192.168.1.100:8888/health` | — |
+| **Elasticsearch** | `http://192.168.1.100:9200` | elastic / changeme |
+| **pfSense** | `https://192.168.1.1` | admin / pfsense |
 
 ---
 
 <div style="page-break-after: always;"></div>
 
+# 🎬 PARTIE 5 : Démonstrations Vidéo
+
+## 23. Liens Vidéo
+
+> ⚠️ **ATTENTION :** Remplacer les `[LIEN_VIDEO_X]` par les URLs Google Drive / YouTube après upload. Consulter `SCREENSHOTS-CHECKLIST.md` pour les instructions d'enregistrement.
+
+| # | Vidéo | Description | Lien |
+|---|-------|-------------|------|
+| **V1** | Démarrage `docker compose up -d` | Stack qui démarre, 12 containers UP | [▶️ Regarder][LIEN_VIDEO_1] |
+| **V2** | Client → pfSense → enseigne NSOC | Client se connecte, voit l'enseigne | [▶️ Regarder][LIEN_VIDEO_2] |
+| **V3** | Kibana — 3 types d'events en temps réel | Navigation dns/tls/alert + filtrage KQL | [▶️ Regarder][LIEN_VIDEO_3] |
+| **V4** | Arkime — analyse PCAP | Sessions, inspection paquet, filtres | [▶️ Regarder][LIEN_VIDEO_4] |
+| **V5** | Alerte Suricata en direct | `curl testmyids.com` → alerte Kibana | [▶️ Regarder][LIEN_VIDEO_5] |
+| **V6** | Dashboard Kibana avec trafic client | Trafic client → logs en temps réel | [▶️ Regarder][LIEN_VIDEO_6] |
+
+> 💡 **INFO :** Recommandation — Regardez V1 (démarrage) puis V5 (alerte en direct) pour comprendre le pipeline complet.
+
 ---
 
-## 🎯 19. Conclusion
+<div style="page-break-after: always;"></div>
+
+# 🎯 24. Conclusion
 
 <div align="center">
 
-### ✨ Installation Complète en 3 Machines ✨
+### ✨ Installation Complète — 3 Machines, 12 Services ✨
 
 </div>
 
-**🎓 Félicitations!** Votre plateforme de surveillance réseau NSOC est opérationnelle avec une architecture professionnelle à 3 machines.
+**🎓 Félicitations !** Votre plateforme de surveillance réseau NSOC est opérationnelle avec une architecture professionnelle à 3 machines et 12 services Docker.
 
-### 📊 Ce que vous avez accompli:
+### Ce que vous avez accompli
 
 | ✅ Étape | 📝 Réalisation |
 |----------|----------------|
-| **1. pfSense** | Routeur configuré avec port mirroring actif |
-| **2. Ubuntu NSOC** | 6 conteneurs Docker déployés et opérationnels |
-| **3. Client Linux** | Machine de test générant du trafic réseau |
-| **4. Capture** | PCAP + IDS Suricata capturant le trafic en temps réel |
-| **5. Visualisation** | Kibana affichant les événements du client |
+| **1. pfSense** | Routeur configuré avec port mirroring SPAN actif |
+| **2. Suricata 7.0** | IDS déployé, 64k règles, génère eve.json |
+| **3. Arkime v5** | Analyseur PCAP interactif opérationnel (:8005) |
+| **4. ELK 8.11.0** | Elasticsearch + Kibana avec dashboards configurés |
+| **5. Portainer** | Interface Docker web opérationnelle (:9000) |
+| **6. Status API** | API santé services opérationnelle (:8888) |
+| **7. Enseigne légale** | Page de conformité accessible (/enseigne.html) |
+| **8. Client Linux** | Machine de test générant du trafic capturé |
 
-### 🔄 Architecture Opérationnelle:
+### Architecture opérationnelle
 
 ```
-Client Linux → Trafic réseau → pfSense (port mirroring) → Ubuntu NSOC → Kibana
+Client Linux → Trafic réseau → pfSense (SPAN) → Ubuntu NSOC
+                                                    ↓
+                                              Suricata → eve.json → Filebeat → Elasticsearch → Kibana
+                                              Arkime Capture → PCAP sessions → Arkime Viewer
 ```
 
-**📈 Résultat:** Le trafic de la machine cliente est capturé, analysé et visualisé en temps réel!
+### Prochaines étapes recommandées
 
-### 🚀 Prochaines Étapes Recommandées:
+1. **📊 Personnaliser les dashboards Kibana** — Créer des visualisations spécifiques à votre réseau
+2. **🔍 Explorer Arkime** — Analyser les sessions PCAP en détail
+3. **⚙️ Ajouter des règles Suricata** — Créer des règles de détection personnalisées
+4. **📈 Configurer des alertes** — Watcher Kibana pour les événements critiques
+5. **🔒 Changer les mots de passe** — elastic/changeme → mots de passe forts
 
-1. **📚 Consulter l'architecture:** Lisez `architecture-publique.md` pour comprendre le système en détail
-2. **📊 Créer des dashboards:** Personnalisez vos visualisations dans Kibana
-3. **🔍 Explorer les données:** Utilisez les recherches KQL dans Kibana:
-   - `event_type:dns` - Requêtes DNS
-   - `event_type:alert` - Alertes IDS
-   - `src_ip:"192.168.1.50"` - Trafic du client
-4. **⚙️ Ajouter des règles Suricata:** Créez vos propres règles de détection
-5. **📈 Analyser les statistiques:** Utilisez les visualisations pour identifier les tendances
+### Bonnes pratiques
 
-### 🛡️ Bonnes Pratiques:
-
-- **🔒 Sécurité:** Changez les mots de passe par défaut (Portainer, pfSense)
-- **💾 Backup:** Sauvegardez régulièrement vos configurations
-- **🧹 Nettoyage:** Configurez la rotation automatique des PCAP et logs
-- **📊 Monitoring:** Vérifiez quotidiennement l'espace disque et la RAM
-- **🔄 Mise à jour:** Mettez à jour les images Docker régulièrement
-
-### 📚 Documentation Complémentaire:
-
-Ce guide d'installation fait partie d'un ensemble de documentation technique du projet NSOC:
-- `architecture-publique.md` - Architecture détaillée du système
-- `README.md` - Vue d'ensemble du projet
-- `SURICATA.md` - Configuration avancée de Suricata
-- `KIBANA.md` - Guide d'utilisation de Kibana
-
-### 🐛 En Cas de Problème:
-
-Consultez la section [17. Dépannage par Machine](#17-dépannage-par-machine) de ce guide.
+- **🔒 Sécurité :** Changer tous les mots de passe par défaut
+- **💾 Backup :** `tar -czf backup-configs-$(date +%F).tar.gz configs/ .env docker-compose.yml`
+- **🧹 Nettoyage :** `find data/pcap/ -type f -mtime +7 -delete` (hebdomadaire)
+- **📊 Monitoring :** Vérifier quotidiennement `df -h` et `free -h`
+- **🔄 Mise à jour :** `docker compose pull && docker compose up -d` (mensuel)
 
 ---
 
@@ -1402,24 +1087,23 @@ Consultez la section [17. Dépannage par Machine](#17-dépannage-par-machine) de
 
 | Champ | Valeur |
 |-------|--------|
-| **Document** | Guide d'Installation Privé - NSOC |
-| **Classification** | 🔒 Confidentiel - Usage Interne |
-| **Version** | 2.1 - Simplifié (Architecture 3 Machines) |
+| **Document** | Guide d'Installation Privé — NSOC |
+| **Classification** | 🔒 Confidentiel — Usage Interne |
+| **Version** | 3.0 — Stack 12 services + Arkime v5 |
 | **Date** | Février 2026 |
 | **Auteurs** | Salif Biaye, Ndeye Astou Diagouraga |
-| **Institution** | ESP - UCAD, Dakar |
-| **Formation** | DIC-3-GLSI - Génie Informatique |
+| **Institution** | ESP — UCAD, Dakar |
+| **Formation** | DIC-3-GLSI — Génie Informatique |
 | **Projet** | Network Security Operations Center |
-| **Méthode** | Déploiement Docker Multi-Machines |
 
 ---
 
 <div align="center">
 
-**🔒 Document Confidentiel - Ne Pas Diffuser**
+**🔒 Document Confidentiel — Ne Pas Diffuser**
 
 **Made with ❤️ for Cybersecurity Education**
 
-🛡️ **NSOC** - Protecting Networks, One Packet at a Time
+🛡️ **NSOC** — Protecting Networks, One Packet at a Time
 
 </div>
